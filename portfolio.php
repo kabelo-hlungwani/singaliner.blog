@@ -1,175 +1,170 @@
 <!DOCTYPE html>
-<html lang="en" style="font-family: Allerta, sans-serif;">
+<html lang="en">
 <?php
-    include 'connect.php';
- 
-    // Check connection
-    if (mysqli_connect_errno())
-      {
-      echo "Failed to connect to MySQL: " . mysqli_connect_error();
-      }
-     
-      
-    ?>
+include 'connect.php';
+
+if (mysqli_connect_errno()) {
+    echo "Failed to connect to MySQL: " . mysqli_connect_error();
+}
+?>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Gallery-Singaliner Inc</title><link rel="icon" href="assets/img/singa1 (2).png">
+    <title>Gallery - Singaliner Inc</title>
+    <link rel="icon" href="assets/img/singa1 (2).png">
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Allerta">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Almarai">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arapey">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Archivo+Narrow">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Balthazar">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Barlow">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cookie">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Quicksand">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap">
     <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
     <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
     <link rel="stylesheet" href="assets/fonts/ionicons.min.css">
     <link rel="stylesheet" href="assets/fonts/line-awesome.min.css">
-    <link rel="stylesheet" href="assets/fonts/simple-line-icons.min.css">
-    <link rel="stylesheet" href="assets/fonts/typicons.min.css">
-    <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css">
-    <link rel="stylesheet" href="assets/css/-product-features.css">
-    <link rel="stylesheet" href="assets/css/animated-services.css">
-    <link rel="stylesheet" href="assets/css/Animation-Cards-1.css">
-    <link rel="stylesheet" href="assets/css/Animation-Cards.css">
-    <link rel="stylesheet" href="assets/css/Article-Clean.css">
-    <link rel="stylesheet" href="assets/css/Basic-fancyBox-Gallery-v2.css">
-    <link rel="stylesheet" href="assets/css/Bootstrap-Callout-Info.css">
-    <link rel="stylesheet" href="assets/css/cards.css">
-    <link rel="stylesheet" href="assets/css/Customizable-Background--Overlay.css">
-    <link rel="stylesheet" href="assets/css/ebs-contact-form-1.css">
-    <link rel="stylesheet" href="assets/css/ebs-contact-form.css">
-    <link rel="stylesheet" href="assets/css/featured-products-slider-1.css">
-    <link rel="stylesheet" href="assets/css/featured-products-slider.css">
-    <link rel="stylesheet" href="assets/css/Features-Boxed.css">
-    <link rel="stylesheet" href="assets/css/Footer-Basic.css">
-    <link rel="stylesheet" href="assets/css/Footer-Clean-1.css">
-    <link rel="stylesheet" href="assets/css/Footer-Clean.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-    <link rel="stylesheet" href="assets/css/JLX-Fixed-Nav-on-Scroll.css">
-    <link rel="stylesheet" href="assets/css/Latest-Events.css">
-    <link rel="stylesheet" href="assets/css/Login-Box-En.css">
-    <link rel="stylesheet" href="assets/css/Modern-Contact-Form.css">
-    <link rel="stylesheet" href="assets/css/NewsHeaher-1.css">
-    <link rel="stylesheet" href="assets/css/NewsHeaher.css">
-    <link rel="stylesheet" href="assets/css/Newsletter-Subscription-Form.css">
-    <link rel="stylesheet" href="assets/css/OcOrato---Contact-Information-bar-line-with-e-mail-link-1.css">
-    <link rel="stylesheet" href="assets/css/Pretty-Footer.css">
-    <link rel="stylesheet" href="assets/css/Projects-Horizontal.css">
-    <link rel="stylesheet" href="assets/css/Sidebar-1-1.css">
-    <link rel="stylesheet" href="assets/css/Sidebar-1.css">
-    <link rel="stylesheet" href="assets/css/Social-Icons.css">
-    <link rel="stylesheet" href="assets/css/styles.css">
-    <link rel="stylesheet" href="assets/css/Team-Boxed.css">
-    <link rel="stylesheet" href="assets/css/Team-Clean.css">
-    <link rel="stylesheet" href="assets/css/untitled-1.css">
-    <link rel="stylesheet" href="assets/css/untitled.css">
+    <link rel="stylesheet" href="assets/css/site-modern.css">
 </head>
 
 <body>
-    <div class="top">
-        <nav class="navbar navbar-light navbar-expand-md fixed-top" id="navbar-main" style="opacity: 0.95;background: #000000;text-align: center;">
-            <div class="container-fluid">
-                <div><a class="navbar-brand" href="index.php" style="color: rgba(255,255,255,0.9);font-family: Barlow, sans-serif;">Singaliner <span style="color: rgb(0,51,127);border-color: #003cd0;">Inc.</span></a></div><button class="navbar-toggler" data-toggle="collapse"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"><i class="icon ion-android-menu" style="color: #003cd0;"></i></span></button>
-            </div>
-        </nav>
-    </div>
-    <div style="height: 500px;margin-top: -8px;background: url(&quot;assets/img/pexels-ono-kosuki-6000150.jpg&quot;) center / cover no-repeat;filter: grayscale(69%);">
-        <div class="d-flex justify-content-center align-items-center" style="height:inherit;min-height:initial;width:100%;position:absolute;left:0;background-color:rgba(30,41,99,0.53);">
-            <div class="d-flex align-items-center order-12" style="height: 200px;padding-top: 176px;">
-                <div class="container">
-                    <h1 class="text-center" data-aos="fade-down-right" data-aos-duration="1000" data-aos-delay="1100" data-aos-once="true" style="color: var(--white);font-size: 40px;font-weight: bold;font-family: Barlow, sans-serif;"><img src="assets/img/singa1%20(2).png" style="height: 147px;filter: contrast(200%) hue-rotate(360deg);"></h1>
-                    <h1 class="text-center" data-aos="fade-down-right" data-aos-duration="1000" data-aos-delay="1100" data-aos-once="true" style="color: rgb(242,245,248);font-size: 35px;font-weight: normal;font-family: Barlow, sans-serif;">Singaliner Inc.</h1>
-                    <h3 class="text-center" data-aos="fade-down-right" data-aos-duration="1000" data-aos-delay="1000" data-aos-once="true" style="color: rgb(242,245,248);padding-top: 0.25em;padding-bottom: 0.25em;font-weight: normal;font-family: Barlow, sans-serif;font-size: 20px;">"GALLERY"</h3>
+    <div class="site-shell">
+        <nav class="navbar navbar-dark navbar-expand-md fixed-top modern-nav">
+            <div class="container">
+                <a class="navbar-brand" href="index.php">Singaliner <span class="brand-em">Inc.</span></a>
+                <button data-toggle="collapse" class="navbar-toggler" data-target="#galleryNav" aria-controls="galleryNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="galleryNav">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="portfolio.php">Gallery</a></li>
+                        <li class="nav-item"><a class="nav-link" href="blog.php">Blog</a></li>
+                    </ul>
                 </div>
             </div>
-        </div>
-    </div>
-    
-    
-    <div class="container" style="padding-top: 25px;">
-    <div class="col" style="padding-top: 22px;"><a class="btn btn-primary btn-sm" role="button" style="font-family: Barlow, sans-serif;background: rgb(46,46,46);border-color: transparent;" href="index.php"><i class="la la-home"></i>Home</a></div>
-   
-    </div>
-    <?PHP          
-         
-        
-         $result=mysqli_query($conn,"SELECT * from gallery_category");
-         $rows=mysqli_num_rows($result);        
-         
-         if ($rows>0) {
-           
-         
-        while ($rows=mysqli_fetch_array($result)) {
+        </nav>
 
+        <header class="site-hero">
+            <div class="container">
+                <span class="hero-kicker">VISUAL PORTFOLIO</span>
+                <div>
+                    <img class="hero-logo" src="assets/img/singa1%20(2).png" alt="Singaliner logo">
+                </div>
+                <h1>Gallery</h1>
+                <p>Selected visuals from our projects and moments.</p>
+            </div>
+        </header>
 
+        <main class="section-wrap">
+            <div class="container">
+                <section class="panel mb-4">
+                    <div class="gallery-section-title">
+                        <h2 class="gallery-title">Explore Our Work</h2>
+                        <a class="home-btn" href="index.php"><i class="la la-home"></i> Home</a>
+                    </div>
+                    <p class="panel-sub mb-0">Browse each category and click any image to view it in full size.</p>
+                </section>
 
+                <?php
+                $result = mysqli_query($conn, "SELECT * FROM gallery_category");
+                $rows = mysqli_num_rows($result);
 
-            
-            ?> 
-    <div class="container" style="padding-top: 25px;">
-  
-        
-       
-        <p style="font-family: Barlow, sans-serif;text-align: center;font-size: 16px;font-weight: normal;"><?php echo $rows['category'] ?>&nbsp;</p>
-        <div class="row fbox3">
-
-         <?php
-         
-         $div=$rows['category'];
-
-
-         $result1=mysqli_query($conn,"SELECT * from gallery_category,gallery where gallery.section=gallery_category.category and gallery.section='$div'");
-         $rows1=mysqli_num_rows($result1);        
-         
-         if ($rows1>0) {
-           
-         
-        while ($rows1=mysqli_fetch_array($result1)) {
-         
-        ?>
-         <div class="col-sm-4 d-flex justify-content-center align-items-center"><a data-fancybox="gallery" href="author/gallery/<?php echo $rows1['picture']?>"><img class="img-fluid" src="author/gallery/<?php echo $rows1['picture']?>" alt="<?php echo $rows['category']?>"></a></div>
-         
-         <?php
-         
-        }
-    
-    }
-         
-        ?>
-       
-            
-        </div>
-    </div>
-
-
-
-    <?php }
-         }
+                if ($rows > 0) {
+                    while ($rows = mysqli_fetch_array($result)) {
+                        $div = $rows['category'];
                         ?>
-    <footer class="footer-basic" style="background: rgb(0,0,0);">
-        <div class="social"><a href="#" style="background: #ffffff;opacity: 1;"><i class="icon ion-social-instagram" style="color: rgb(0,0,0);font-size: 20px;"></i></a><a href="#" style="background: #ffffff;opacity: 1;font-size: 20px;"><i class="icon ion-social-twitter" style="color: rgb(0,0,0);"></i></a><a href="#" style="font-size: 20px;background: #ffffff;opacity: 1;"><i class="icon ion-social-facebook" style="color: rgb(0,0,0);"></i></a></div>
-        <ul class="list-inline">
-            <li class="list-inline-item"><a href="index.php" style="color: rgb(255,255,255);font-size: 14px;font-weight: normal;font-family: Barlow, sans-serif;opacity: 1;">Home</a></li>
-            <li class="list-inline-item"><a href="#" style="color: rgb(255,255,255);font-size: 14px;font-weight: normal;font-family: Barlow, sans-serif;opacity: 1;">Gallery</a></li>
-            <li class="list-inline-item"><a href="blog.php" style="color: rgb(255,255,255);font-size: 14px;font-weight: normal;font-family: Barlow, sans-serif;opacity: 1;">Blog</a></li>
-        </ul>
-        <p class="copyright" style="font-family: Barlow, sans-serif;font-weight: normal;color: rgb(255,255,255);">Singaliner Inc© 2010-<?php echo date('Y')?></p>
-    </footer>
+                        <section class="panel">
+                            <div class="gallery-section-title">
+                                <h3 class="gallery-title"><?php echo htmlspecialchars($rows['category']); ?></h3>
+                            </div>
+                            <div class="row gallery-grid">
+                                <?php
+                                $result1 = mysqli_query($conn, "SELECT * FROM gallery_category,gallery WHERE gallery.section=gallery_category.category AND gallery.section='$div'");
+                                $rows1 = mysqli_num_rows($result1);
+
+                                if ($rows1 > 0) {
+                                    while ($rows1 = mysqli_fetch_array($result1)) {
+                                        ?>
+                                        <div class="col-sm-6 col-lg-4 gallery-item">
+                                            <a data-fancybox="gallery-<?php echo md5($rows['category']); ?>" href="author/gallery/<?php echo htmlspecialchars($rows1['picture']); ?>">
+                                                <img src="author/gallery/<?php echo htmlspecialchars($rows1['picture']); ?>" alt="<?php echo htmlspecialchars($rows['category']); ?>">
+                                            </a>
+                                        </div>
+                                        <?php
+                                    }
+                                } else {
+                                    ?>
+                                    <div class="col-12">
+                                        <p class="panel-sub mb-0">No images available in this section yet.</p>
+                                    </div>
+                                    <?php
+                                }
+                                ?>
+                            </div>
+                        </section>
+                        <?php
+                    }
+                }
+                ?>
+            </div>
+        </main>
+
+        <footer class="modern-footer">
+            <div class="footer-top container">
+                <div class="row">
+                    <div class="col-lg-4 mb-4 mb-lg-0">
+                        <div class="footer-brand">
+                            <h3>Singaliner Inc.</h3>
+                            <p>Creative media, marketing, and business services built to help brands communicate with impact.</p>
+                        </div>
+                        <div class="social">
+                            <a href="#" aria-label="Instagram"><i class="icon ion-social-instagram"></i></a>
+                            <a href="#" aria-label="Twitter"><i class="icon ion-social-twitter"></i></a>
+                            <a href="#" aria-label="Facebook"><i class="icon ion-social-facebook"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-2 mb-4 mb-lg-0">
+                        <h4>Explore</h4>
+                        <ul class="footer-links">
+                            <li><a href="index.php">Home</a></li>
+                            <li><a href="portfolio.php">Gallery</a></li>
+                            <li><a href="blog.php">Blog</a></li>
+                            <li><a href="index.php#contact">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-lg-3 mb-4 mb-lg-0">
+                        <h4>Gallery</h4>
+                        <ul class="footer-services">
+                            <li>Category Albums</li>
+                            <li>Project Highlights</li>
+                            <li>Event Moments</li>
+                            <li>Visual Storytelling</li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-3">
+                        <h4>Contact</h4>
+                        <ul class="footer-contact">
+                            <li><i class="icon ion-ios-email"></i> Singaliner@executivemail.co.za</li>
+                            <li><i class="icon ion-ios-telephone"></i> +27 78 762 2161</li>
+                            <li><i class="icon ion-ios-location"></i> Johannesburg, South Africa</li>
+                        </ul>
+                        <div class="footer-cta">
+                            <p class="mb-1">Share your brief and we can craft visuals for your brand.</p>
+                            <a class="footer-btn" href="index.php#contact">Book a Creative Session</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p class="copyright">Singaliner Inc &copy; 2010-<?php echo date('Y'); ?>. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+
+        <button id="scrollTopBtn" class="scroll-top-btn" type="button" aria-label="Scroll to top">
+            <i class="fa fa-chevron-up"></i>
+        </button>
+    </div>
+
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/js/bs-init.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script src="assets/js/featured-products-slider.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js"></script>
-    <script src="assets/js/JLX-Fixed-Nav-on-Scroll.js"></script>
-    <script src="assets/js/NewsHeaher.js"></script>
+    <script src="assets/js/site-modern.js"></script>
 </body>
 
 </html>
