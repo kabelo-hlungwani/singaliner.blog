@@ -157,10 +157,42 @@
         window.addEventListener('scroll', onScroll, { passive: true });
     }
 
+    function setupMobileNav() {
+        var nav = document.querySelector('.modern-nav');
+        if (!nav) {
+            return;
+        }
+
+        var collapse = nav.querySelector('.navbar-collapse');
+        var toggler = nav.querySelector('.navbar-toggler');
+        if (!collapse || !toggler) {
+            return;
+        }
+
+        nav.addEventListener('click', function (e) {
+            var link = e.target.closest('.nav-link');
+            if (!link) {
+                return;
+            }
+
+            if (window.innerWidth >= 768) {
+                return;
+            }
+
+            if (!collapse.classList.contains('show')) {
+                return;
+            }
+
+            // Use the existing Bootstrap toggler to close the menu safely.
+            toggler.click();
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         setActiveNav();
         setupReveal();
         setupScrollTopButton();
         setupScrolledNav();
+        setupMobileNav();
     });
 })();

@@ -52,8 +52,39 @@ a:hover {
     .modern-nav .navbar-collapse.collapsing {
         background: rgba(7, 16, 30, 0.97);
         border-radius: 0 0 14px 14px;
-        padding: 0.5rem 0.75rem 1rem;
+        padding: 0.6rem 0.75rem 1rem;
         margin-top: 0.35rem;
+        max-height: calc(100dvh - 74px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .modern-nav .navbar-nav {
+        align-items: stretch !important;
+    }
+
+    .modern-nav .navbar-nav .nav-item {
+        width: 100%;
+    }
+
+    .modern-nav .navbar-nav .nav-link {
+        display: block;
+        width: 100%;
+        min-height: 44px;
+        padding: 0.72rem 0.95rem;
+        font-size: 0.98rem;
+        border-radius: 10px;
+    }
+
+    .modern-nav .navbar-nav .nav-item + .nav-item {
+        margin-top: 0.2rem;
+    }
+
+    .modern-nav .navbar-nav .nav-link.nav-cta {
+        margin-left: 0;
+        margin-top: 0.35rem;
+        text-align: center;
+        padding: 0.8rem 1rem !important;
     }
 }
 
