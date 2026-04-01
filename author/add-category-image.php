@@ -2,18 +2,20 @@
 session_start();
 include 'connect.php';
 
-$id = isset($_GET['edt']) ? (int)$_GET['edt'] : 0;    // admin_id from session if needed
+$id = isset($_GET['edt']) ? (int)$_GET['edt'] : (isset($_SESSION['admin_id']) ? (int)$_SESSION['admin_id'] : 0);
 
 if (isset($_POST['add'])) {
+  
     $heading = mysqli_real_escape_string($conn, $_POST['heading']);
-    $adid    = (int)$_SESSION['admin_id'];
     $exists  = mysqli_fetch_assoc(mysqli_query($conn, "SELECT category_id FROM gallery_category WHERE category='$heading' LIMIT 1"));
     if ($exists) {
         $formError = 'That category name already exists.';
+        echo '<script>console.log("Form submitted");</script>'; // Debugging line
     } else {
-        $q = mysqli_query($conn, "INSERT INTO gallery_category(admin_id,category) VALUES('$adid','$heading')");
+        $q = mysqli_query($conn, "INSERT INTO gallery_category(admin_id,category) VALUES('$id','$heading')");
         if ($q) { $_SESSION['flash'] = ['type'=>'success','msg'=>'Category added successfully.']; header('Location: g-category.php'); exit; }
         $formError = 'Something went wrong. Please try again.';
+        
     }
 }
 

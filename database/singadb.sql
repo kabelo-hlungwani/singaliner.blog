@@ -101,7 +101,7 @@ INSERT INTO `blog_category` (`category_id`, `admin_id`, `category`) VALUES
 --
 
 CREATE TABLE `gallery` (
-  `img_id` int(11) NOT NULL,
+  `img_id` int(11) NOT NULL ,
   `admin_id` int(11) NOT NULL,
   `section` varchar(255) NOT NULL,
   `picture` varchar(255) NOT NULL
