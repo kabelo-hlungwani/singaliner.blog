@@ -2,16 +2,36 @@
 session_start();
 include 'connect.php';
 
-// Stat queries
-$artCount  = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(article_id) AS n FROM article"))['n'];
-$imgCount  = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(img_id) AS n FROM gallery"))['n'];
-$catCount  = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(category_id) AS n FROM blog_category"))['n'];
-$gcatCount = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(category_id) AS n FROM gallery_category"))['n'];
-$viewsRow  = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COALESCE(SUM(views),0) AS n FROM article"));
-$viewCount = $viewsRow ? $viewsRow['n'] : 0;
+function dbScalarSafe($conn, $sql, $default = 0) {
+  try {
+    $res = mysqli_query($conn, $sql);
+    if (!$res) {
+      return $default;
+    }
+    $row = mysqli_fetch_row($res);
+    return isset($row[0]) ? $row[0] : $default;
+  } catch (Throwable $e) {
+    return $default;
+  }
+}
+
+function dbQuerySafe($conn, $sql) {
+  try {
+    return mysqli_query($conn, $sql);
+  } catch (Throwable $e) {
+    return false;
+  }
+}
+
+// Stat queries (safe for stricter production DB configs)
+$artCount  = (int) dbScalarSafe($conn, "SELECT COUNT(article_id) FROM article", 0);
+$imgCount  = (int) dbScalarSafe($conn, "SELECT COUNT(img_id) FROM gallery", 0);
+$catCount  = (int) dbScalarSafe($conn, "SELECT COUNT(category_id) FROM blog_category", 0);
+$gcatCount = (int) dbScalarSafe($conn, "SELECT COUNT(category_id) FROM gallery_category", 0);
+$viewCount = (int) dbScalarSafe($conn, "SELECT COALESCE(SUM(views),0) FROM article", 0);
 
 // Recent articles
-$recent = mysqli_query($conn, "SELECT heading, date, picture FROM article ORDER BY date DESC LIMIT 5");
+$recent = dbQuerySafe($conn, "SELECT heading, date, picture FROM article ORDER BY date DESC LIMIT 5");
 
 $pageTitle = 'Dashboard';
 ?>
