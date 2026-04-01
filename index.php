@@ -1,3 +1,4 @@
+<?php include 'connect.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,6 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Home - Singaliner Inc</title>
+    <meta name="description" content="Singaliner Inc — creative media, marketing, web design, journalism and PR services based in Johannesburg.">
     <link rel="icon" href="assets/img/singa1 (2).png">
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap">
@@ -17,128 +19,188 @@
 
 <body>
     <div class="site-shell">
+
+        <!-- ===== NAV ===== -->
         <nav class="navbar navbar-dark navbar-expand-md fixed-top modern-nav">
             <div class="container">
-                <a class="navbar-brand" href="index.php">Singaliner <span class="brand-em">Inc.</span></a>
+                <a class="navbar-brand" href="index.php"><img src="assets/img/singa1%20(2).png" alt="Singaliner" class="brand-logo">Singaliner <span class="brand-em">Inc.</span></a>
                 <button data-toggle="collapse" class="navbar-toggler" data-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="mainNav">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#service">Services</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                    <ul class="navbar-nav ml-auto align-items-md-center">
+                        <li class="nav-item"><a class="nav-link active" href="index.php">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="services.php">Services</a></li>
                         <li class="nav-item"><a class="nav-link" href="portfolio.php">Gallery</a></li>
                         <li class="nav-item"><a class="nav-link" href="blog.php">Blog</a></li>
+                        <li class="nav-item"><a class="nav-link nav-cta" href="contact.php">Let&rsquo;s Talk</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
 
+        <!-- ===== HERO ===== -->
         <header class="site-hero">
             <div class="container">
-                <span class="hero-kicker">CREATIVE MEDIA PARTNER</span>
+                <span class="hero-kicker">CREATIVE MEDIA PARTNER &mdash; JOHANNESBURG</span>
                 <div>
                     <img class="hero-logo" src="assets/img/singa1%20(2).png" alt="Singaliner logo">
                 </div>
                 <h1>Singaliner Inc.</h1>
-                <p>A modern media, marketing, and business partner focused on impact.</p>
+                <p>Media. Marketing. Impact. &mdash; serving brands with clarity and creativity since 2010.</p>
+                <div class="hero-btns">
+                    <a class="hero-cta-primary" href="services.php">View Services &rarr;</a>
+                    <a class="hero-cta-outline" href="blog.php">Read the Blog</a>
+                </div>
             </div>
         </header>
 
-        <main class="section-wrap">
+        <!-- ===== STATS STRIP ===== -->
+        <section class="stats-strip reveal">
             <div class="container">
-                <section id="about" class="panel">
-                    <h2 class="panel-title">Our Mission & Vision</h2>
-                    <p class="panel-sub">We promote local economic growth by employing locally and building strong, sustainable media and marketing solutions.</p>
-                    <div class="feature-callout">
-                        <h2>Since 2010 in Johannesburg</h2>
-                        <p class="mb-0">We started in Johannesburg CBD and continue to deliver services nationwide with a strong commitment to quality and job creation.</p>
+                <div class="row text-center">
+                    <div class="col-6 col-md-3 mb-3 mb-md-0">
+                        <div class="stat-num">14+</div>
+                        <div class="stat-label">Years in Business</div>
                     </div>
-                </section>
+                    <div class="col-6 col-md-3 mb-3 mb-md-0">
+                        <div class="stat-num">200+</div>
+                        <div class="stat-label">Projects Delivered</div>
+                    </div>
+                    <div class="col-6 col-md-3 mb-3 mb-md-0">
+                        <div class="stat-num">6</div>
+                        <div class="stat-label">Core Services</div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-num">100%</div>
+                        <div class="stat-label">Local Employment</div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-                <section class="panel">
+        <!-- ===== MAIN ===== -->
+        <main class="section-wrap mt-4">
+            <div class="container">
+
+                <!-- About teaser -->
+                <section class="panel reveal">
                     <h2 class="panel-title">Who We Are</h2>
+                    <p class="panel-sub">A creative media and marketing company rooted in Johannesburg, built for impact since 2010.</p>
                     <div class="row align-items-center">
-                        <div class="col-lg-7 mb-3 mb-lg-0">
-                            <img class="about-image" src="assets/img/pexels-alexander-dummer-134469.jpg" alt="Team workspace">
+                        <div class="col-md-7">
+                            <p>From press releases and digital campaigns to full film production and web builds &mdash; we partner with businesses to tell their stories with authenticity and precision. We employ locally, work nationwide, and treat every brief with care.</p>
+                            <div class="row mt-3 mb-3">
+                                <div class="col-6">
+                                    <div class="why-card">
+                                        <div class="why-icon"><i class="fa fa-users"></i></div>
+                                        <h4>Local Team</h4>
+                                        <p>100% locally employed talent across every discipline.</p>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="why-card">
+                                        <div class="why-icon"><i class="fa fa-trophy"></i></div>
+                                        <h4>14+ Years</h4>
+                                        <p>Trusted by brands across South Africa since 2010.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <a class="home-btn" href="about.php">Our Full Story &rarr;</a>
                         </div>
-                        <div class="col-lg-5">
-                            <p>Singaliner Inc is a media, marketing, and business company specializing in web design, public relations, journalism, filming, graphic design, and online marketing.</p>
-                            <p class="mb-0">We are mobile in providing marketing and advertising nationwide, with emphasis on development and narrowing social and economic gaps.</p>
+                        <div class="col-md-5 mt-4 mt-md-0">
+                            <img src="assets/img/singa1%20(2).png" alt="Singaliner team at work" class="about-image">
                         </div>
                     </div>
                 </section>
 
-                <section id="service" class="panel">
-                    <h2 class="panel-title">Services</h2>
-                    <p class="panel-sub">Practical services designed to help brands communicate clearly and grow with confidence.</p>
+                <!-- Services teaser -->
+                <section class="panel reveal">
+                    <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap">
+                        <div>
+                            <h2 class="panel-title mb-1">What We Do</h2>
+                            <p class="panel-sub mb-0">Six creative disciplines, one unified studio.</p>
+                        </div>
+                        <a class="home-btn mt-2 mt-md-0" href="services.php">All Services &rarr;</a>
+                    </div>
                     <div class="row service-grid">
-                        <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="col-md-6 col-lg-4 mb-4">
                             <article class="service-card">
-                                <i class="fa fa-modx service-icon"></i>
-                                <h3>Web Design</h3>
-                                <p>Modern interfaces and user-focused layouts that improve clarity and conversion.</p>
+                                <img class="service-card-img" src="assets/img/hero-background-technology.jpg" alt="Web Design">
+                                <div class="service-card-body">
+                                   
+                                    <h3>Web Design</h3>
+                                    <p>Modern, responsive interfaces that improve clarity and conversion.</p>
+                                </div>
                             </article>
                         </div>
-                        <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="col-md-6 col-lg-4 mb-4">
                             <article class="service-card">
-                                <i class="fas fa-journal-whills service-icon"></i>
-                                <h3>Journalism</h3>
-                                <p>Fact-based reporting with strong evidence and clear storytelling.</p>
+                                <img class="service-card-img" src="assets/img/hero-background-photography.jpg" alt="Filming and Photography">
+                                <div class="service-card-body">
+                                   
+                                    <h3>Filming &amp; Photography</h3>
+                                    <p>Video and photo production delivered to broadcast quality.</p>
+                                </div>
                             </article>
                         </div>
-                        <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="col-md-6 col-lg-4 mb-4">
                             <article class="service-card">
-                                <i class="fas fa-film service-icon"></i>
-                                <h3>Filming</h3>
-                                <p>Video recording, editing, photo capturing, and post-production delivery.</p>
-                            </article>
-                        </div>
-                        <div class="col-md-6 col-lg-4 mb-3">
-                            <article class="service-card">
-                                <i class="fas fa-laptop service-icon"></i>
-                                <h3>Online Marketing</h3>
-                                <p>Web-based campaigns that connect your message with the right audience.</p>
-                            </article>
-                        </div>
-                        <div class="col-md-6 col-lg-4 mb-3">
-                            <article class="service-card">
-                                <i class="fab fa-leanpub service-icon"></i>
-                                <h3>Public Relations</h3>
-                                <p>Campaign planning, press communication, and strategic reputation management.</p>
-                            </article>
-                        </div>
-                        <div class="col-md-6 col-lg-4 mb-3">
-                            <article class="service-card">
-                                <i class="fas fa-marker service-icon"></i>
-                                <h3>Marketing</h3>
-                                <p>Marketing strategy, promotion, and brand development for business growth.</p>
+                                <img class="service-card-img" src="assets/img/pexels-fauxels-3183199.jpg" alt="Public Relations">
+                                <div class="service-card-body">
+                                    
+                                    <h3>Public Relations</h3>
+                                    <p>Strategic communication and reputation management.</p>
+                                </div>
                             </article>
                         </div>
                     </div>
                 </section>
 
-                <section id="contact" class="panel">
-                    <h2 class="panel-title">Contact Us</h2>
-                    <p class="panel-sub">Call, visit, or send an email to discuss your project.</p>
+            </div><!-- /.container -->
+
+            <!-- Latest from the Blog -->
+            <?php
+            $blogRes = mysqli_query($conn, "SELECT a.article_id, a.heading, a.picture, a.date, adm.name, adm.surname FROM article a JOIN admin adm ON a.admin_id = adm.admin_id ORDER BY a.date DESC LIMIT 3");
+            $hasArticles = $blogRes && mysqli_num_rows($blogRes) > 0;
+            if ($hasArticles): ?>
+            <div class="container mt-4">
+                <section class="panel reveal">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h2 class="panel-title mb-0">Latest from the Blog</h2>
+                        <a class="home-btn" href="blog.php">All stories &rarr;</a>
+                    </div>
                     <div class="row">
-                        <div class="col-lg-5 mb-3 mb-lg-0">
-                            <ul class="contact-list">
-                                <li><i class="typcn typcn-location"></i> 88 Marshalltown, Samancor House, Johannesburg, 2107</li>
-                                <li><i class="icon ion-ios-email"></i> Singaliner@executivemail.co.za</li>
-                                <li><i class="icon ion-ios-telephone"></i> +27 78 762 2161</li>
-                            </ul>
+                        <?php while ($bp = mysqli_fetch_assoc($blogRes)): ?>
+                        <div class="col-md-4 mb-3">
+                            <a class="blog-preview-card" href="read.php?edt=<?php echo (int)$bp['article_id']; ?>">
+                                <img src="author/articles/<?php echo htmlspecialchars($bp['picture']); ?>" alt="<?php echo htmlspecialchars($bp['heading']); ?>">
+                                <div class="bpc-body">
+                                    <p class="bpc-date"><i class="fa fa-clock-o"></i> <?php echo htmlspecialchars($bp['date']); ?></p>
+                                    <h4><?php echo htmlspecialchars($bp['heading']); ?></h4>
+                                </div>
+                            </a>
                         </div>
-                        <div class="col-lg-7">
-                            <iframe class="contact-map" allowfullscreen="" frameborder="0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCEe3-wdRHXj_9rLAyN2SyQr6lkbWuH8i4&amp;q=Johannesburg%2Cmarshalltown%2Csamanco+house&amp;zoom=15&amp;maptype=satellite"></iframe>
-                        </div>
+                        <?php endwhile; ?>
                     </div>
                 </section>
             </div>
+            <?php endif; ?>
+
         </main>
 
-        <footer class="modern-footer">
+        <!-- ===== CTA BAND ===== -->
+        <section class="cta-band">
+            <div class="container">
+                <h2>Ready to bring your story to life?</h2>
+                <p>Partner with a team that combines local expertise with professional-grade creative services.</p>
+                <a class="cta-band-btn" href="contact.php">Start a Conversation</a>
+            </div>
+        </section>
+
+        <!-- ===== FOOTER ===== -->
+        <footer class="modern-footer mt-0">
             <div class="footer-top container">
                 <div class="row">
                     <div class="col-lg-4 mb-4 mb-lg-0">
@@ -156,7 +218,7 @@
                         <h4>Explore</h4>
                         <ul class="footer-links">
                             <li><a href="index.php">Home</a></li>
-                            <li><a href="#about">About</a></li>
+                            <li><a href="about.php">About</a></li>
                             <li><a href="portfolio.php">Gallery</a></li>
                             <li><a href="blog.php">Blog</a></li>
                         </ul>
@@ -164,10 +226,11 @@
                     <div class="col-6 col-lg-3 mb-4 mb-lg-0">
                         <h4>Services</h4>
                         <ul class="footer-services">
-                            <li>Web Design</li>
-                            <li>Online Marketing</li>
-                            <li>Public Relations</li>
-                            <li>Filming & Journalism</li>
+                            <li><a href="services.php">Web Design</a></li>
+                            <li><a href="services.php">Online Marketing</a></li>
+                            <li><a href="services.php">Public Relations</a></li>
+                            <li><a href="services.php">Filming &amp; Journalism</a></li>
+                            <li><a href="services.php">Graphic Design</a></li>
                         </ul>
                     </div>
                     <div class="col-lg-3">
@@ -179,7 +242,7 @@
                         </ul>
                         <div class="footer-cta">
                             <p class="mb-1">Need media support for your next campaign?</p>
-                            <a class="footer-btn" href="#contact">Start a Conversation</a>
+                            <a class="footer-btn" href="contact.php">Start a Conversation</a>
                         </div>
                     </div>
                 </div>

@@ -1,133 +1,90 @@
-<!DOCTYPE html>
-<html lang="en">
 <?php
-    include 'connect.php';
- 
-    // Check connection
-    if (mysqli_connect_errno())
-      {
-      echo "Failed to connect to MySQL: " . mysqli_connect_error();
-      }
-     
-      if(!isset($_SESSION)) 
-      { 
-          session_start(); 
-          $email=$_SESSION['email'];
-          $idadmin=$_SESSION['admin_id'];
-      
-      }
-
-    ?> 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Images-Singaliner Inc</title><link rel="icon" href="assets/img/logo.png">
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Barlow">
-    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/css/Contact-Form-Clean.css">
-    <link rel="stylesheet" href="https://cdn.quilljs.com/1.0.0/quill.snow.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-    <link rel="stylesheet" href="assets/css/login-form-1.css">
-    <link rel="stylesheet" href="assets/css/login-form.css">
-    <link rel="stylesheet" href="assets/css/Pretty-Login-Form.css">
-    <link rel="stylesheet" href="assets/css/styles.css">
-</head>
-<?php
-
+session_start();
 include 'connect.php';
 
-if (mysqli_connect_errno())
-{
-echo "Failed to connect to MySQL: " . mysqli_connect_error();
+$id = isset($_GET['edt']) ? (int)$_GET['edt'] : 0;
+
+if (isset($_POST['add'])) {
+    $cat = mysqli_real_escape_string($conn, $_POST['category']);
+
+    // Handle optional new image upload
+    if (!empty($_FILES['picture']['name'])) {
+        $ext      = pathinfo($_FILES['picture']['name'], PATHINFO_EXTENSION);
+        $newname  = 'gallery_' . time() . '.' . $ext;
+        $target   = 'gallery/' . $newname;
+        $allowed  = ['jpg','jpeg','png','gif','webp'];
+        if (!in_array(strtolower($ext), $allowed)) {
+            $formError = 'Invalid file type. Allowed: jpg, jpeg, png, gif, webp.';
+        } elseif (!move_uploaded_file($_FILES['picture']['tmp_name'], $target)) {
+            $formError = 'Image upload failed. Please try again.';
+        } else {
+            $q = mysqli_query($conn, "UPDATE gallery SET section='$cat', picture='$newname' WHERE img_id='$id'");
+            if ($q) { header('Location: gallery.php'); exit; }
+            $formError = 'Something went wrong. Please try again.';
+        }
+    } else {
+        $q = mysqli_query($conn, "UPDATE gallery SET section='$cat' WHERE img_id='$id'");
+        if ($q) { header('Location: gallery.php'); exit; }
+        $formError = 'Something went wrong. Please try again.';
+    }
 }
 
+$qry  = mysqli_query($conn, "SELECT * FROM gallery WHERE img_id='$id' LIMIT 1");
+$img  = $qry ? mysqli_fetch_assoc($qry) : null;
+$cats = mysqli_query($conn, "SELECT * FROM gallery_category ORDER BY category ASC");
 
-
-$id=$_GET['edt'];
-
-
-
-
-
-if(isset($_POST['add']))
-{
-
-// Posted Values
-$cat=$_POST['category'];
-$imgfile=$_FILES["image"]["name"];
-// get the image extension
-$extension = substr($imgfile,strlen($imgfile)-4,strlen($imgfile));
-// allowed extensions
-$allowed_extensions = array(".jpg","jpeg",".png",".gif");
-// Validation for allowed extensions .in_array() function searches an array for a specific value.
-if(!in_array($extension,$allowed_extensions))
-{
-echo '<script>alert("Invalid format. Only jpg / jpeg/ png /gif format allowed")window.location = "add-images.php";</script>';
-}
-else
-{
-//rename the image file
-$imgnewfile=md5($imgfile).$extension;
-// Code for move image into directory
-move_uploaded_file($_FILES["image"]["tmp_name"],"gallery/".$imgnewfile);
-// Query for insertion data into database
-$query=mysqli_query($conn,"UPDATE gallery SET section='$cat', picture='$imgnewfile' where img_id='$id'");
-if($query)
-{
-
-echo '<script>alert("Image uploaded.");window.location = "gallery.php";</script>';
-}
-else
-{
-    echo '<script>alert("Something went wrong.");window.location = "add-images.php";</script>';
-}}
-    
-
-
-
-
-}
-
-
+$pageTitle = 'Edit Image';
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <title>Edit Image – Singaliner Admin</title>
+  <link rel="icon" href="assets/img/logo.png">
+  <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
+  <link rel="stylesheet" href="assets/css/admin-modern.css">
+</head>
 <body>
-    <div class="container shadow-lg" data-aos="fade-down-right" data-aos-duration="900" data-aos-delay="500" style="font-family: Barlow, sans-serif;padding-bottom: 46px;">
-        <form method="post"  enctype="multipart/form-data" style="margin-top: 50px;">
-            <h2 class="text-right"><a href="gallery.php"><i class="fa fa-remove" style="color: rgb(61,62,64);font-size: 23px;"></i></a></h2>
-            <h2 class="text-center">Update Image In Gallery</h2><label>Upload Image(s)</label>
-            <div class="form-group"><input class="form-control-file" type="file" name="image" required=""></div><label>Gallery Category</label>
-            <div class="form-group"><select class="form-control" name="category" required="">
-                    <optgroup label="This is a group">
-                        <option value="" selected="">Category</option>
-                        <?PHP          
-         
-         $result=mysqli_query($conn,"SELECT * from gallery_category");
-         $rows=mysqli_num_rows($result);        
-         
-         if ($rows>0) {
-           
-         
-        while ($rows=mysqli_fetch_array($result)) {
-            
-            ?>
-                        <option value="<?php echo $rows['category']?>"><?php echo $rows['category']?></option>
-
-                        <?php }
-         }
-                        ?>
-                   
-                    </optgroup>
-                </select></div>
-            <div class="form-group"><button class="btn btn-primary btn-block" type="submit" name="add" style="background: var(--gray-dark);border-color: transparent;">Post</button></div>
-        </form>
+<?php include 'include/admin-nav.php'; ?>
+<a href="gallery.php" class="back-link"><i class="fas fa-arrow-left"></i> Back to Gallery</a>
+<div class="page-hdr"><div><h1>Edit Gallery Image</h1></div></div>
+<?php if (!empty($formError)): ?>
+<div style="background:#fee2e2;color:#dc2626;border-radius:10px;padding:12px 16px;font-size:.83rem;margin-bottom:16px;">
+  <i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($formError) ?>
+</div>
+<?php endif; ?>
+<div class="admin-card" style="max-width:540px;">
+  <div class="admin-card-hdr"><h5><i class="fas fa-image" style="color:var(--brand);margin-right:7px;"></i>Image Details</h5></div>
+  <div class="admin-card-body">
+    <?php if ($img && !empty($img['picture'])): ?>
+    <div style="margin-bottom:16px;">
+      <img src="gallery/<?= htmlspecialchars($img['picture']) ?>" alt="Current"
+           style="max-width:220px;border-radius:8px;border:2px solid var(--border);">
+      <p style="font-size:.78rem;color:var(--text-muted);margin-top:6px;">Current image</p>
     </div>
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/js/bs-init.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script src="https://cdn.quilljs.com/1.0.0/quill.js"></script>
-    <script src="assets/js/Quill-Text-Editor.js"></script>
+    <?php endif; ?>
+    <form class="adm-form" method="post" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="category">Category</label>
+        <select class="form-control" id="category" name="category" required>
+          <option value="">— Select Category —</option>
+          <?php if ($cats): while ($c = mysqli_fetch_assoc($cats)): ?>
+          <option value="<?= htmlspecialchars($c['category']) ?>"
+            <?= (($img['section'] ?? '') == $c['category'] ? 'selected' : '') ?>>
+            <?= htmlspecialchars($c['category']) ?>
+          </option>
+          <?php endwhile; endif; ?>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="picture">Replace Image <span style="color:var(--text-muted);font-weight:400;">(optional)</span></label>
+        <input class="form-control" type="file" id="picture" name="picture" accept="image/*">
+      </div>
+      <button class="btn-adm primary" type="submit" name="add"><i class="fas fa-save"></i> Save Changes</button>
+    </form>
+  </div>
+</div>
+<?php include 'include/admin-footer.php'; ?>
 </body>
-
 </html>

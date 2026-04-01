@@ -24,15 +24,18 @@ if (mysqli_connect_errno()) {
     <div class="blog-shell">
         <nav class="navbar navbar-dark navbar-expand-md fixed-top modern-nav">
             <div class="container">
-                <a class="navbar-brand" href="index.php">Singaliner <span class="brand-em">Inc.</span></a>
+                <a class="navbar-brand" href="index.php"><img src="assets/img/singa1%20(2).png" alt="Singaliner" class="brand-logo">Singaliner <span class="brand-em">Inc.</span></a>
                 <button data-toggle="collapse" class="navbar-toggler" data-target="#blogNav" aria-controls="blogNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="blogNav">
-                    <ul class="navbar-nav ml-auto">
+                    <ul class="navbar-nav ml-auto align-items-md-center">
                         <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="services.php">Services</a></li>
                         <li class="nav-item"><a class="nav-link" href="portfolio.php">Gallery</a></li>
                         <li class="nav-item"><a class="nav-link active" href="blog.php">Blog</a></li>
+                        <li class="nav-item"><a class="nav-link nav-cta" href="contact.php">Let&rsquo;s Talk</a></li>
                     </ul>
                 </div>
             </div>
@@ -52,10 +55,24 @@ if (mysqli_connect_errno()) {
         <main class="blog-main">
             <div class="container">
                 <section class="blog-panel">
-                    <h2 class="blog-heading">All Stories</h2>
+                    <?php
+                    $perPage    = 6;
+                    $page       = isset($_GET['pg']) ? max(1, (int)$_GET['pg']) : 1;
+                    $cntRes     = mysqli_query($conn, "SELECT COUNT(*) AS total FROM article");
+                    $cntRow     = mysqli_fetch_assoc($cntRes);
+                    $totalPosts = (int)$cntRow['total'];
+                    // page 1 = featured(1) + up to $perPage grid; page 2+ = $perPage grid
+                    $totalPages = ($totalPosts <= 1) ? 1 : (int)ceil(($totalPosts - 1) / $perPage);
+                    $page       = min($page, $totalPages);
+                    $gridOffset = 1 + ($page - 1) * $perPage;
+                    ?>
+                    <div class="section-head">
+                        <h2 class="blog-heading">All Stories</h2>
+                        <span class="post-count"><?php echo $totalPosts; ?> post<?php echo $totalPosts !== 1 ? 's' : ''; ?></span>
+                    </div>
 
                     <div class="toolbar">
-                        <a class="btn-home" href="index.php"><i class="icon-home"></i> Home</a>
+                       
                         <ul class="category-list">
                             <li><a class="category-pill active" href="blog.php">All</a></li>
                             <?php
@@ -75,33 +92,104 @@ if (mysqli_connect_errno()) {
                         </ul>
                     </div>
 
-                    <div class="row">
-                        <?php
-                        $res = mysqli_query($conn, "SELECT * FROM article,admin WHERE admin.admin_id=article.admin_id ORDER BY article.date DESC");
-                        $row = mysqli_num_rows($res);
+                    <?php
+                    // ── Fetch featured (most recent post — always post #1) ──────
+                    $fpRes = mysqli_query($conn, "SELECT article.*, admin.name, admin.surname FROM article JOIN admin ON admin.admin_id = article.admin_id ORDER BY article.date DESC LIMIT 1");
+                    $fp    = ($fpRes && mysqli_num_rows($fpRes) > 0) ? mysqli_fetch_assoc($fpRes) : null;
 
-                        if ($row > 0) {
-                            while ($row = mysqli_fetch_array($res)) {
-                                ?>
-                                <div class="col-md-6 col-lg-4 mb-4">
-                                    <article class="card story-card">
-                                        <div class="story-image-wrap">
-                                            <img src="author/articles/<?php echo htmlspecialchars($row['picture']); ?>" alt="<?php echo htmlspecialchars($row['heading']); ?>">
-                                        </div>
-                                        <div class="card-body">
-                                            <h3 class="story-title">
-                                                <a href="read.php?edt=<?php echo (int)$row['article_id']; ?>"><?php echo htmlspecialchars($row['heading']); ?></a>
-                                            </h3>
-                                            <p class="story-meta">By <i class="fa fa-user"></i> <?php echo htmlspecialchars($row['name'] . ' ' . $row['surname']); ?></p>
-                                            <p class="story-meta"><i class="fa fa-clock-o"></i> <?php echo htmlspecialchars($row['date']); ?></p>
-                                        </div>
-                                    </article>
-                                </div>
-                                <?php
-                            }
-                        }
+                    // ── Fetch paginated grid posts ───────────────────────────────
+                    $gridRes   = mysqli_query($conn, "SELECT article.*, admin.name, admin.surname FROM article JOIN admin ON admin.admin_id = article.admin_id ORDER BY article.date DESC LIMIT $perPage OFFSET $gridOffset");
+                    $gridPosts = [];
+                    if ($gridRes) {
+                        while ($gp = mysqli_fetch_assoc($gridRes)) { $gridPosts[] = $gp; }
+                    }
+                    ?>
+
+                    <?php if ($fp): ?>
+
+                        <?php if ($page === 1):
+                            $fpWords   = str_word_count(strip_tags($fp['content']));
+                            $fpTime    = max(1, (int)round($fpWords / 200));
+                            $fpText    = strip_tags($fp['content']);
+                            $fpExcerpt = mb_strlen($fpText) > 200 ? mb_substr($fpText, 0, 200) . '…' : $fpText;
                         ?>
+                    <article class="featured-card mb-5 reveal">
+                        <div class="featured-img-wrap">
+                            <img src="author/articles/<?php echo htmlspecialchars($fp['picture']); ?>" alt="<?php echo htmlspecialchars($fp['heading']); ?>">
+                            <span class="story-badge"><?php echo htmlspecialchars($fp['category']); ?></span>
+                        </div>
+                        <div class="featured-body">
+                            <span class="featured-label">&#9733; Featured Story</span>
+                            <h2 class="featured-title">
+                                <a href="read.php?edt=<?php echo (int)$fp['article_id']; ?>"><?php echo htmlspecialchars($fp['heading']); ?></a>
+                            </h2>
+                            <p class="story-excerpt"><?php echo htmlspecialchars($fpExcerpt); ?></p>
+                            <div class="story-meta mb-3">
+                                <i class="fas fa-user"></i> <?php echo htmlspecialchars($fp['name'] . ' ' . $fp['surname']); ?>
+                                &nbsp;&middot;&nbsp;
+                                <i class="fas fa-calendar-alt"></i> <?php echo htmlspecialchars($fp['date']); ?>
+                                &nbsp;&middot;&nbsp;
+                                <i class="fas fa-clock"></i> <?php echo $fpTime; ?> min read
+                                &nbsp;&middot;&nbsp;
+                                <i class="fas fa-eye"></i> <?php echo number_format((int)$fp['views']); ?> views
+                            </div>
+                            <a class="story-read-more" href="read.php?edt=<?php echo (int)$fp['article_id']; ?>">Read Story &nbsp;<i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </article>
+                        <?php endif; ?>
+
+                        <?php if (!empty($gridPosts)): ?>
+                    <div class="row">
+                        <?php foreach ($gridPosts as $post):
+                            $wc      = str_word_count(strip_tags($post['content']));
+                            $rt      = max(1, (int)round($wc / 200));
+                            $txt     = strip_tags($post['content']);
+                            $excerpt = mb_strlen($txt) > 110 ? mb_substr($txt, 0, 110) . '…' : $txt;
+                        ?>
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <article class="card story-card reveal">
+                                <div class="story-image-wrap">
+                                    <img src="author/articles/<?php echo htmlspecialchars($post['picture']); ?>" alt="<?php echo htmlspecialchars($post['heading']); ?>">
+                                    <span class="story-badge"><?php echo htmlspecialchars($post['category']); ?></span>
+                                </div>
+                                <div class="card-body d-flex flex-column">
+                                    <h3 class="story-title">
+                                        <a href="read.php?edt=<?php echo (int)$post['article_id']; ?>"><?php echo htmlspecialchars($post['heading']); ?></a>
+                                    </h3>
+                                    <p class="story-excerpt"><?php echo htmlspecialchars($excerpt); ?></p>
+                                    <div class="story-footer">
+                                        <p class="story-meta mb-0">
+                                            <i class="fas fa-user"></i> <?php echo htmlspecialchars($post['name'] . ' ' . $post['surname']); ?><br>
+                                            <i class="fas fa-calendar-alt"></i> <?php echo htmlspecialchars($post['date']); ?> &middot; <i class="fas fa-clock"></i> <?php echo $rt; ?> min &middot; <i class="fas fa-eye"></i> <?php echo number_format((int)$post['views']); ?>
+                                        </p>
+                                        <a class="story-read-more" href="read.php?edt=<?php echo (int)$post['article_id']; ?>">Read More <i class="fas fa-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                        <?php endforeach; ?>
                     </div>
+                        <?php endif; ?>
+
+                    <?php else: ?>
+                    <div class="empty-state">
+                        <i class="fas fa-newspaper"></i>
+                        <p>No stories published yet. Check back soon!</p>
+                    </div>
+                    <?php endif; ?>
+
+                    <?php if ($totalPages > 1): ?>
+                    <nav class="blog-pagination" aria-label="Page navigation">
+                        <a class="pg-btn<?php echo $page <= 1 ? ' disabled' : ''; ?>"
+                           href="?pg=<?php echo $page - 1; ?>" aria-label="Previous">&lsaquo;</a>
+                        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                        <a class="pg-btn<?php echo $i === $page ? ' active' : ''; ?>"
+                           href="?pg=<?php echo $i; ?>"><?php echo $i; ?></a>
+                        <?php endfor; ?>
+                        <a class="pg-btn<?php echo $page >= $totalPages ? ' disabled' : ''; ?>"
+                           href="?pg=<?php echo $page + 1; ?>" aria-label="Next">&rsaquo;</a>
+                    </nav>
+                    <?php endif; ?>
                 </section>
             </div>
         </main>

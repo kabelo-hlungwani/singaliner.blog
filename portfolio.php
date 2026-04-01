@@ -26,15 +26,18 @@ if (mysqli_connect_errno()) {
     <div class="site-shell">
         <nav class="navbar navbar-dark navbar-expand-md fixed-top modern-nav">
             <div class="container">
-                <a class="navbar-brand" href="index.php">Singaliner <span class="brand-em">Inc.</span></a>
+                <a class="navbar-brand" href="index.php"><img src="assets/img/singa1%20(2).png" alt="Singaliner" class="brand-logo">Singaliner <span class="brand-em">Inc.</span></a>
                 <button data-toggle="collapse" class="navbar-toggler" data-target="#galleryNav" aria-controls="galleryNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="galleryNav">
-                    <ul class="navbar-nav ml-auto">
+                    <ul class="navbar-nav ml-auto align-items-md-center">
                         <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="services.php">Services</a></li>
                         <li class="nav-item"><a class="nav-link active" href="portfolio.php">Gallery</a></li>
                         <li class="nav-item"><a class="nav-link" href="blog.php">Blog</a></li>
+                        <li class="nav-item"><a class="nav-link nav-cta" href="contact.php">Let&rsquo;s Talk</a></li>
                     </ul>
                 </div>
             </div>

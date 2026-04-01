@@ -27,15 +27,18 @@ $menuEscaped = mysqli_real_escape_string($conn, $menu);
     <div class="blog-shell">
         <nav class="navbar navbar-dark navbar-expand-md fixed-top modern-nav">
             <div class="container">
-                <a class="navbar-brand" href="index.php">Singaliner <span class="brand-em">Inc.</span></a>
+                <a class="navbar-brand" href="index.php"><img src="assets/img/singa1%20(2).png" alt="Singaliner" class="brand-logo">Singaliner <span class="brand-em">Inc.</span></a>
                 <button data-toggle="collapse" class="navbar-toggler" data-target="#blogNav" aria-controls="blogNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="blogNav">
-                    <ul class="navbar-nav ml-auto">
+                    <ul class="navbar-nav ml-auto align-items-md-center">
                         <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="services.php">Services</a></li>
                         <li class="nav-item"><a class="nav-link" href="portfolio.php">Gallery</a></li>
                         <li class="nav-item"><a class="nav-link active" href="blog.php">Blog</a></li>
+                        <li class="nav-item"><a class="nav-link nav-cta" href="contact.php">Let&rsquo;s Talk</a></li>
                     </ul>
                 </div>
             </div>
@@ -55,10 +58,23 @@ $menuEscaped = mysqli_real_escape_string($conn, $menu);
         <main class="blog-main">
             <div class="container">
                 <section class="blog-panel">
-                    <h2 class="blog-heading"><?php echo htmlspecialchars($menu); ?> Stories</h2>
+                    <?php
+                    $perPage  = 6;
+                    $page     = isset($_GET['pg']) ? max(1, (int)$_GET['pg']) : 1;
+                    $cntCat   = mysqli_query($conn, "SELECT COUNT(*) AS total FROM article WHERE category = '$menuEscaped'");
+                    $cntCatR  = mysqli_fetch_assoc($cntCat);
+                    $totalCat = (int)$cntCatR['total'];
+                    $totalPages = max(1, (int)ceil($totalCat / $perPage));
+                    $page       = min($page, $totalPages);
+                    $offset     = ($page - 1) * $perPage;
+                    ?>
+                    <div class="section-head">
+                        <h2 class="blog-heading"><?php echo htmlspecialchars($menu); ?> Stories</h2>
+                        <span class="post-count"><?php echo $totalCat; ?> post<?php echo $totalCat !== 1 ? 's' : ''; ?></span>
+                    </div>
 
                     <div class="toolbar">
-                        <a class="btn-home" href="index.php"><i class="icon-home"></i> Home</a>
+                        <a class="btn-home" href="index.php"><i class="fas fa-home"></i> Home</a>
                         <ul class="category-list">
                             <li><a class="category-pill" href="blog.php">All</a></li>
                             <?php
@@ -81,23 +97,32 @@ $menuEscaped = mysqli_real_escape_string($conn, $menu);
 
                     <div class="row">
                         <?php
-                        $res = mysqli_query($conn, "SELECT * FROM article,admin WHERE admin.admin_id=article.admin_id AND article.category='$menuEscaped' ORDER BY article.date DESC");
-                        $row = mysqli_num_rows($res);
-
-                        if ($row > 0) {
-                            while ($row = mysqli_fetch_array($res)) {
+                        $res = mysqli_query($conn, "SELECT article.*, admin.name, admin.surname FROM article JOIN admin ON admin.admin_id = article.admin_id WHERE article.category = '$menuEscaped' ORDER BY article.date DESC LIMIT $perPage OFFSET $offset");
+                        if ($res && mysqli_num_rows($res) > 0) {
+                            while ($post = mysqli_fetch_assoc($res)) {
+                                $wc      = str_word_count(strip_tags($post['content']));
+                                $rt      = max(1, (int)round($wc / 200));
+                                $txt     = strip_tags($post['content']);
+                                $excerpt = mb_strlen($txt) > 110 ? mb_substr($txt, 0, 110) . '…' : $txt;
                                 ?>
                                 <div class="col-md-6 col-lg-4 mb-4">
-                                    <article class="card story-card">
+                                    <article class="card story-card reveal">
                                         <div class="story-image-wrap">
-                                            <img src="author/articles/<?php echo htmlspecialchars($row['picture']); ?>" alt="<?php echo htmlspecialchars($row['heading']); ?>">
+                                            <img src="author/articles/<?php echo htmlspecialchars($post['picture']); ?>" alt="<?php echo htmlspecialchars($post['heading']); ?>">
+                                            <span class="story-badge"><?php echo htmlspecialchars($post['category']); ?></span>
                                         </div>
-                                        <div class="card-body">
+                                        <div class="card-body d-flex flex-column">
                                             <h3 class="story-title">
-                                                <a href="read.php?edt=<?php echo (int)$row['article_id']; ?>"><?php echo htmlspecialchars($row['heading']); ?></a>
+                                                <a href="read.php?edt=<?php echo (int)$post['article_id']; ?>"><?php echo htmlspecialchars($post['heading']); ?></a>
                                             </h3>
-                                            <p class="story-meta">By <i class="fa fa-user"></i> <?php echo htmlspecialchars($row['name'] . ' ' . $row['surname']); ?></p>
-                                            <p class="story-meta"><i class="fa fa-clock-o"></i> <?php echo htmlspecialchars($row['date']); ?></p>
+                                            <p class="story-excerpt"><?php echo htmlspecialchars($excerpt); ?></p>
+                                            <div class="story-footer">
+                                                <p class="story-meta mb-0">
+                                                    <i class="fas fa-user"></i> <?php echo htmlspecialchars($post['name'] . ' ' . $post['surname']); ?><br>
+                                                    <i class="fas fa-calendar-alt"></i> <?php echo htmlspecialchars($post['date']); ?> &middot; <i class="fas fa-clock"></i> <?php echo $rt; ?> min &middot; <i class="fas fa-eye"></i> <?php echo number_format((int)$post['views']); ?>
+                                                </p>
+                                                <a class="story-read-more" href="read.php?edt=<?php echo (int)$post['article_id']; ?>">Read More <i class="fas fa-arrow-right"></i></a>
+                                            </div>
                                         </div>
                                     </article>
                                 </div>
@@ -106,12 +131,28 @@ $menuEscaped = mysqli_real_escape_string($conn, $menu);
                         } else {
                             ?>
                             <div class="col-12">
-                                <p class="story-meta mb-0">No stories found in this category yet.</p>
+                                <div class="empty-state">
+                                    <i class="fas fa-folder-open"></i>
+                                    <p>No stories in this category yet. <a href="blog.php">Browse all posts</a>.</p>
+                                </div>
                             </div>
                             <?php
                         }
                         ?>
                     </div>
+
+                    <?php if ($totalPages > 1): ?>
+                    <nav class="blog-pagination" aria-label="Page navigation">
+                        <a class="pg-btn<?php echo $page <= 1 ? ' disabled' : ''; ?>"
+                           href="?edt=<?php echo urlencode($menu); ?>&pg=<?php echo $page - 1; ?>" aria-label="Previous">&lsaquo;</a>
+                        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                        <a class="pg-btn<?php echo $i === $page ? ' active' : ''; ?>"
+                           href="?edt=<?php echo urlencode($menu); ?>&pg=<?php echo $i; ?>"><?php echo $i; ?></a>
+                        <?php endfor; ?>
+                        <a class="pg-btn<?php echo $page >= $totalPages ? ' disabled' : ''; ?>"
+                           href="?edt=<?php echo urlencode($menu); ?>&pg=<?php echo $page + 1; ?>" aria-label="Next">&rsaquo;</a>
+                    </nav>
+                    <?php endif; ?>
                 </section>
             </div>
         </main>

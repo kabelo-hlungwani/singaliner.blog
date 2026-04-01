@@ -1,11 +1,18 @@
 (function () {
+    // Sub-pages that belong to a parent nav item
+    var PAGE_PARENT = {
+        'category.php': 'blog.php',
+        'read.php': 'blog.php'
+    };
+
     function normalizePath(path) {
         var last = path.split('/').pop();
         return last || 'index.php';
     }
 
     function setActiveNav() {
-        var page = normalizePath(window.location.pathname);
+        var rawPage = normalizePath(window.location.pathname);
+        var page = PAGE_PARENT[rawPage] || rawPage;
         var links = document.querySelectorAll('.modern-nav .nav-link');
         var sectionLinks = [];
 
@@ -31,7 +38,7 @@
             }
         });
 
-        if (sectionLinks.length === 0 || page !== 'index.php') {
+        if (sectionLinks.length === 0 || rawPage !== 'index.php') {
             return;
         }
 
@@ -74,7 +81,7 @@
 
     function setupReveal() {
         var targets = document.querySelectorAll(
-            '.panel, .blog-panel, .story-card, .article-shell, .related-box, .service-card, .feature-callout, .gallery-item, .gallery-section-title, .contact-map'
+            '.panel, .blog-panel, .story-card, .article-shell, .related-box, .service-card, .feature-callout, .gallery-item, .gallery-section-title, .contact-map, .why-card, .blog-preview-card, .stats-strip, .cta-band'
         );
 
         if (targets.length === 0) {
@@ -132,9 +139,28 @@
         window.addEventListener('scroll', onScroll, { passive: true });
     }
 
+    function setupScrolledNav() {
+        var nav = document.querySelector('.modern-nav');
+        if (!nav) {
+            return;
+        }
+
+        var onScroll = function () {
+            if (window.scrollY > 60) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        };
+
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         setActiveNav();
         setupReveal();
         setupScrollTopButton();
+        setupScrolledNav();
     });
 })();

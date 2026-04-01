@@ -1,119 +1,76 @@
-<!DOCTYPE html>
-<html lang="en">
 <?php
-    include 'connect.php';
- 
-    // Check connection
-    if (mysqli_connect_errno())
-      {
-      echo "Failed to connect to MySQL: " . mysqli_connect_error();
-      }
-     
-      if(!isset($_SESSION)) 
-      { 
-          session_start(); 
-          $email=$_SESSION['email'];
-          $idadmin=$_SESSION['admin_id'];
-      
-      }
-
-    ?> 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Stories-Singaliner Inc</title><link rel="icon" href="assets/img/logo.png">
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Barlow">
-    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/css/Contact-Form-Clean.css">
-    <link rel="stylesheet" href="https://cdn.quilljs.com/1.0.0/quill.snow.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-    <link rel="stylesheet" href="assets/css/login-form-1.css">
-    <link rel="stylesheet" href="assets/css/login-form.css">
-    <link rel="stylesheet" href="assets/css/Pretty-Login-Form.css">
-    <link rel="stylesheet" href="assets/css/styles.css">
-    
-    <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
-</head>
-<?php
-
+session_start();
 include 'connect.php';
 
-if (mysqli_connect_errno())
-{
-echo "Failed to connect to MySQL: " . mysqli_connect_error();
+$id = isset($_GET['edt']) ? (int)$_GET['edt'] : 0;
+
+if (isset($_POST['add'])) {
+    if (empty($_FILES['picture']['name'])) {
+        $formError = 'Please choose a new image to upload.';
+    } else {
+        $ext     = pathinfo($_FILES['picture']['name'], PATHINFO_EXTENSION);
+        $newname = 'article_' . time() . '.' . $ext;
+        $target  = 'articles/' . $newname;
+        $allowed = ['jpg','jpeg','png','gif','webp'];
+        if (!in_array(strtolower($ext), $allowed)) {
+            $formError = 'Invalid file type. Allowed: jpg, jpeg, png, gif, webp.';
+        } elseif (!move_uploaded_file($_FILES['picture']['tmp_name'], $target)) {
+            $formError = 'Image upload failed. Please try again.';
+        } else {
+            $q = mysqli_query($conn, "UPDATE article SET picture='$newname' WHERE article_id='$id'");
+            if ($q) { header('Location: stories.php'); exit; }
+            $formError = 'Something went wrong. Please try again.';
+        }
+    }
 }
 
+$qry = mysqli_query($conn, "SELECT article_id, heading, picture FROM article WHERE article_id='$id' LIMIT 1");
+$art = $qry ? mysqli_fetch_assoc($qry) : null;
 
-
-$id=$_GET['edt'];
-
-
-
-
-
-if(isset($_POST['add']))
-{
-
-// Posted Values
-
-$imgfile=$_FILES["picture"]["name"];
-// get the image extension
-$extension = substr($imgfile,strlen($imgfile)-4,strlen($imgfile));
-// allowed extensions
-$allowed_extensions = array(".jpg","jpeg",".png",".gif");
-// Validation for allowed extensions .in_array() function searches an array for a specific value.
-if(!in_array($extension,$allowed_extensions))
-{
-echo '<script>alert("Invalid format. Only jpg / jpeg/ png /gif format allowed")window.location = "add-stories.php";</script>';
-}
-else
-{
-//rename the image file
-$imgnewfile=md5($imgfile).$extension;
-// Code for move image into directory
-move_uploaded_file($_FILES["picture"]["tmp_name"],"articles/".$imgnewfile);
-// Query for insertion data into database
-$query=mysqli_query($conn,"UPDATE article SET picture='$imgnewfile' where article_id='$id'");
-if($query)
-{
-
-echo '<script>alert("Image updated.");window.location = "stories.php";</script>';
-}
-else
-{
-    echo '<script>alert("Something went wrong.");window.location = "add-stories.php";</script>';
-}}
-    
-
-
-
-
-}
-
-
+$pageTitle = 'Edit Article Picture';
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <title>Edit Article Picture – Singaliner Admin</title>
+  <link rel="icon" href="assets/img/logo.png">
+  <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
+  <link rel="stylesheet" href="assets/css/admin-modern.css">
+</head>
 <body>
-    <div class="container shadow-lg" data-aos="fade-down-right" data-aos-duration="900" data-aos-delay="500" style="font-family: Barlow, sans-serif;padding-bottom: 46px;">
-        <form method="post" enctype="multipart/form-data"  style="margin-top: 50px;">
-            <h2 class="text-right"><a href="stories.php"><i class="fa fa-remove" style="color: rgb(61,62,64);font-size: 23px;"></i></a></h2>
-            <h2 class="text-center">update Stories picture</h2>
-            <div class="form-group"></div><label>Upload Image(s)</label>
-            <div class="form-group"><input class="form-control-file" name="picture" type="file" required=""></div>
-            
-         
-            <div class="form-group"><button class="btn btn-primary btn-block" name="add"type="submit" style="background: var(--gray-dark);border-color: transparent;">save </button></div>
-        </form>
-        <script>
-            CKEDITOR.replace( 'editor1' );
-    </script>
+<?php include 'include/admin-nav.php'; ?>
+<a href="edit-a.php?edt=<?= $id ?>" class="back-link"><i class="fas fa-arrow-left"></i> Back to Edit Article</a>
+<div class="page-hdr"><div><h1>Change Article Cover Image</h1></div></div>
+<?php if (!empty($formError)): ?>
+<div style="background:#fee2e2;color:#dc2626;border-radius:10px;padding:12px 16px;font-size:.83rem;margin-bottom:16px;">
+  <i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($formError) ?>
+</div>
+<?php endif; ?>
+<div class="admin-card" style="max-width:540px;">
+  <div class="admin-card-hdr">
+    <h5><i class="fas fa-camera" style="color:var(--brand);margin-right:7px;"></i>
+      <?= htmlspecialchars($art['heading'] ?? 'Article') ?>
+    </h5>
+  </div>
+  <div class="admin-card-body">
+    <?php if ($art && !empty($art['picture'])): ?>
+    <div style="margin-bottom:16px;">
+      <img src="articles/<?= htmlspecialchars($art['picture']) ?>" alt="Current cover"
+           style="max-width:280px;border-radius:8px;border:2px solid var(--border);">
+      <p style="font-size:.78rem;color:var(--text-muted);margin-top:6px;">Current cover image</p>
     </div>
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/js/bs-init.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script src="https://cdn.quilljs.com/1.0.0/quill.js"></script>
-    <script src="assets/js/Quill-Text-Editor.js"></script>
+    <?php endif; ?>
+    <form class="adm-form" method="post" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="picture">New Cover Image</label>
+        <input class="form-control" type="file" id="picture" name="picture" accept="image/*" required>
+      </div>
+      <button class="btn-adm primary" type="submit" name="add"><i class="fas fa-upload"></i> Upload &amp; Save</button>
+    </form>
+  </div>
+</div>
+<?php include 'include/admin-footer.php'; ?>
 </body>
-
 </html>

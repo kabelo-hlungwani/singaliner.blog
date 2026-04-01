@@ -1,7 +1,7 @@
 
 <?php
 
-$conn=mysqli_connect("localhost","root","Fortunate@15","singalin_singadb");
+$conn=mysqli_connect("localhost","root","","singadb");
 // Check connection
 if (mysqli_connect_errno())
   {

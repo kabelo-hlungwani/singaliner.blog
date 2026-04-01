@@ -1,110 +1,84 @@
-<!DOCTYPE html>
-<html lang="en">
 <?php
-    include 'connect.php';
- 
-    // Check connection
-    if (mysqli_connect_errno())
-      {
-      echo "Failed to connect to MySQL: " . mysqli_connect_error();
-      }
-     
-      if(!isset($_SESSION)) 
-      { 
-          session_start(); 
-          $email=$_SESSION['email'];
-          $idadmin=$_SESSION['admin_id'];
-      
-      }
-
-    ?> 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Stories-Singaliner Inc</title><link rel="icon" href="assets/img/logo.png">
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Barlow">
-    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/css/Contact-Form-Clean.css">
-    <link rel="stylesheet" href="https://cdn.quilljs.com/1.0.0/quill.snow.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-    <link rel="stylesheet" href="assets/css/login-form-1.css">
-    <link rel="stylesheet" href="assets/css/login-form.css">
-    <link rel="stylesheet" href="assets/css/Pretty-Login-Form.css">
-    <link rel="stylesheet" href="assets/css/styles.css">
-    
-    <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
-</head>
-<?php
-
+session_start();
 include 'connect.php';
 
-if (mysqli_connect_errno())
-{
-echo "Failed to connect to MySQL: " . mysqli_connect_error();
+$id = isset($_GET['edt']) ? (int)$_GET['edt'] : 0;
+
+if (isset($_POST['add'])) {
+    $head    = mysqli_real_escape_string($conn, $_POST['heading']);
+    $content = $_POST['editor1'];
+    $edit    = mysqli_query($conn, "UPDATE article SET heading='$head', content='$content' WHERE article_id='$id'");
+    if ($edit) {
+        header('Location: stories.php');
+        exit;
+    }
+    $saveError = 'Something went wrong. Please try again.';
 }
 
+$qry = mysqli_query($conn, "SELECT * FROM article WHERE article_id='$id' LIMIT 1");
+$art = $qry ? mysqli_fetch_assoc($qry) : null;
 
-
-$id=$_GET['edt'];
-
-
-if(isset($_POST['add']))
-{
-
-// Posted Values
-$head=$_POST['heading'];
-$content=$_POST['editor1'];
-
-
-
-
-$edit=mysqli_query($conn,"UPDATE article SET heading='$head',content='$content' WHERE article_id='$id'");  
-
-
-if($edit){
-mysqli_close($conn);
-
-echo '<script>alert(" Story updated .");window.location = "stories.php";</script>';
-
-exit;
-
-} 
-
-
-
-
-}
-
-
+$pageTitle = 'Edit Article';
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <title>Edit Article – Singaliner Admin</title>
+  <link rel="icon" href="assets/img/logo.png">
+  <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
+  <link rel="stylesheet" href="assets/css/admin-modern.css">
+  <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+</head>
 <body>
-    <div class="container shadow-lg" data-aos="fade-down-right" data-aos-duration="900" data-aos-delay="500" style="font-family: Barlow, sans-serif;padding-bottom: 46px;">
-        <form method="post" enctype="multipart/form-data"  style="margin-top: 50px;">
-            <h2 class="text-right"><a href="stories.php"><i class="fa fa-remove" style="color: rgb(61,62,64);font-size: 23px;"></i></a></h2>
-            <h2 class="text-center">Add Stories</h2>
-            <div class="form-group"><input class="form-control" type="text" value="<?php  $qry=mysqli_query($conn,"SELECT * FROM article where article_id='$id'");
- $dat=mysqli_fetch_array($qry);
- echo $dat['heading']
- ?>"  name="heading" placeholder="Heading" ></div><label>Update StoriesImage(s)</label>
-        
-           
-            <div class="form-group"><textarea class="form-control" name="editor1" placeholder="" rows="14"><?php  $qry=mysqli_query($conn,"SELECT * FROM article where article_id='$id'");
- $dat=mysqli_fetch_array($qry);
- echo $dat['content']
- ?></textarea></div>
-            <div class="form-group"><button class="btn btn-primary btn-block" name="add"type="submit" style="background: var(--gray-dark);border-color: transparent;">Save </button></div>
-        </form>
-        <script>
-            CKEDITOR.replace( 'editor1' );
-    </script>
-    </div>
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/js/bs-init.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script src="https://cdn.quilljs.com/1.0.0/quill.js"></script>
-    <script src="assets/js/Quill-Text-Editor.js"></script>
-</body>
 
+<?php include 'include/admin-nav.php'; ?>
+
+<a href="stories.php" class="back-link"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+
+<div class="page-hdr">
+  <div>
+    <h1>Edit Article</h1>
+    <div class="breadcrumb-trail"><a href="dashboard.php">Dashboard</a> / <a href="stories.php">Articles</a> / Edit</div>
+  </div>
+</div>
+
+<?php if (!empty($saveError)): ?>
+<div style="background:#fee2e2;color:#dc2626;border-radius:10px;padding:12px 16px;font-size:.83rem;margin-bottom:16px;">
+  <i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($saveError) ?>
+</div>
+<?php endif; ?>
+
+<div class="admin-card">
+  <div class="admin-card-hdr">
+    <h5><i class="fas fa-edit" style="color:var(--brand);margin-right:7px;"></i>Edit Article Details</h5>
+  </div>
+  <div class="admin-card-body">
+    <form class="adm-form" method="post">
+      <div class="form-group">
+        <label for="heading">Article Heading</label>
+        <input class="form-control" type="text" id="heading" name="heading"
+               value="<?= htmlspecialchars($art['heading'] ?? '') ?>" required>
+      </div>
+
+      <div class="form-group">
+        <label for="editor1">Content</label>
+        <textarea class="form-control" name="editor1" id="editor1" rows="14"><?= htmlspecialchars($art['content'] ?? '') ?></textarea>
+      </div>
+
+      <button class="btn-adm primary" type="submit" name="add">
+        <i class="fas fa-save"></i> Save Changes
+      </button>
+      <a href="edit-article-picture.php?edt=<?= $id ?>" class="btn-adm outline" style="margin-left:10px;">
+        <i class="fas fa-image"></i> Change Picture
+      </a>
+    </form>
+  </div>
+</div>
+
+<script>CKEDITOR.replace('editor1');</script>
+
+<?php include 'include/admin-footer.php'; ?>
+</body>
 </html>
