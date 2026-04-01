@@ -54,9 +54,9 @@ if (mysqli_connect_errno()) {
             </div>
         </header>
 
-        <main class="section-wrap">
+        <main class="section-wrap pt-4">
             <div class="container">
-                <section class="panel mb-4">
+                <section class="panel">
                     <div class="gallery-section-title">
                         <h2 class="gallery-title">Explore Our Work</h2>
                         <a class="home-btn" href="index.php"><i class="la la-home"></i> Home</a>

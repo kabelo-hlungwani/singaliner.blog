@@ -110,7 +110,7 @@
                             <a class="home-btn" href="about.php">Our Full Story &rarr;</a>
                         </div>
                         <div class="col-md-5 mt-4 mt-md-0">
-                            <img src="assets/img/singa1%20(2).png" alt="Singaliner team at work" class="about-image">
+                            <img src="https://images.pexels.com/photos/15360540/pexels-photo-15360540.jpeg" alt="Singaliner team at work" class="about-image">
                         </div>
                     </div>
                 </section>

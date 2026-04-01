@@ -52,11 +52,11 @@
         </header>
 
         <!-- ===== CONTENT ===== -->
-        <main class="section-wrap">
+        <main class="section-wrap pt-4">
             <div class="container">
 
                 <!-- Contact details + map -->
-                <section class="panel">
+                <section class="panel mb-2">
                     <div class="row">
                         <div class="col-lg-5 mb-3 mb-lg-0">
                             <h2 class="panel-title">Reach Us</h2>
@@ -128,7 +128,7 @@
         </section>
 
         <!-- ===== FOOTER ===== -->
-        <footer class="modern-footer">
+        <footer class="modern-footer mt-0">
             <div class="footer-top container">
                 <div class="row">
                     <div class="col-lg-4 mb-4 mb-lg-0">
