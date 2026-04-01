@@ -9,6 +9,7 @@ if (isset($_POST['add'])) {
     $content = $_POST['editor1'];
     $edit    = mysqli_query($conn, "UPDATE article SET heading='$head', content='$content' WHERE article_id='$id'");
     if ($edit) {
+        $_SESSION['flash'] = ['type'=>'success','msg'=>'Article updated successfully.'];
         header('Location: stories.php');
         exit;
     }

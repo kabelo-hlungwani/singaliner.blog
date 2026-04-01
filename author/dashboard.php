@@ -59,10 +59,17 @@ $pageTitle = 'Dashboard';
       <div class="stat-value"><?= (int)$gcatCount ?></div>
     </div>
   </div>
+  <div class="stat-card">
+    <div class="stat-icon" style="background:rgba(236,72,153,.1);color:#ec4899;"><i class="fas fa-eye"></i></div>
+    <div class="stat-info">
+      <div class="stat-label">Total Views</div>
+      <div class="stat-value"><?= number_format((int)$viewCount) ?></div>
+    </div>
+  </div>
 </div>
 
 <!-- Quick actions + recent articles -->
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;flex-wrap:wrap;">
+<div style="flex-wrap:wrap;gap:24px;margin-top:24px;">
 
   <!-- Quick actions -->
   <div class="admin-card">
@@ -70,41 +77,13 @@ $pageTitle = 'Dashboard';
     <div class="admin-card-body" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
       <a href="add-stories.php?edt=<?= $_nav_id ?>" class="btn-adm primary"><i class="fas fa-plus"></i> New Article</a>
       <a href="add-images.php?edt=<?= $_nav_id ?>" class="btn-adm success"><i class="fas fa-cloud-upload-alt"></i> Upload Image</a>
-      <a href="s-category.php?edt=<?= $_nav_id ?>" class="btn-adm outline"><i class="fas fa-tags"></i> Article Cats</a>
-      <a href="g-category.php?edt=<?= $_nav_id ?>" class="btn-adm outline"><i class="fas fa-folder-open"></i> Gallery Cats</a>
+      <a href="s-category.php" class="btn-adm outline"><i class="fas fa-tags"></i> Article Cats</a>
+      <a href="g-category.php" class="btn-adm outline"><i class="fas fa-folder-open"></i> Gallery Cats</a>
     </div>
   </div>
 
   <!-- Recent articles -->
-  <div class="admin-card">
-    <div class="admin-card-hdr">
-      <h5><i class="fas fa-clock" style="color:var(--brand);margin-right:7px;"></i>Recent Articles</h5>
-      <a href="stories.php?edt=<?= $_nav_id ?>" class="btn-adm outline" style="font-size:.75rem;padding:5px 12px;">View all</a>
-    </div>
-    <div class="table-wrap">
-      <table class="admin-table">
-        <thead>
-          <tr>
-            <th>Thumbnail</th>
-            <th>Heading</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php if ($recent && mysqli_num_rows($recent) > 0):
-            while ($r = mysqli_fetch_assoc($recent)): ?>
-          <tr>
-            <td><img class="thumb" src="articles/<?= htmlspecialchars($r['picture']) ?>" alt=""></td>
-            <td><?= htmlspecialchars(mb_strimwidth($r['heading'], 0, 50, '…')) ?></td>
-            <td><?= htmlspecialchars($r['date']) ?></td>
-          </tr>
-          <?php endwhile; else: ?>
-          <tr><td colspan="3" style="text-align:center;color:var(--muted);padding:24px;">No articles yet.</td></tr>
-          <?php endif; ?>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  
 
 </div>
 

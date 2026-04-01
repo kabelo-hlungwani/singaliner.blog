@@ -19,12 +19,12 @@ if (isset($_POST['add'])) {
             $formError = 'Image upload failed. Please try again.';
         } else {
             $q = mysqli_query($conn, "UPDATE gallery SET section='$cat', picture='$newname' WHERE img_id='$id'");
-            if ($q) { header('Location: gallery.php'); exit; }
+            if ($q) { $_SESSION['flash'] = ['type'=>'success','msg'=>'Image updated successfully.']; header('Location: gallery.php'); exit; }
             $formError = 'Something went wrong. Please try again.';
         }
     } else {
         $q = mysqli_query($conn, "UPDATE gallery SET section='$cat' WHERE img_id='$id'");
-        if ($q) { header('Location: gallery.php'); exit; }
+        if ($q) { $_SESSION['flash'] = ['type'=>'success','msg'=>'Image updated successfully.']; header('Location: gallery.php'); exit; }
         $formError = 'Something went wrong. Please try again.';
     }
 }

@@ -11,7 +11,7 @@ if (isset($_POST['add'])) {
         $formError = 'That category already exists.';
     } else {
         $q = mysqli_query($conn, "INSERT INTO blog_category(admin_id,category) VALUES('$id','$heading')");
-        if ($q) { header('Location: s-category.php'); exit; }
+        if ($q) { $_SESSION['flash'] = ['type'=>'success','msg'=>'Category added successfully.']; header('Location: s-category.php'); exit; }
         $formError = 'Something went wrong. Please try again.';
     }
 }

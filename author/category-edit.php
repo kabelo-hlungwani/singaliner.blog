@@ -7,7 +7,7 @@ $id = isset($_GET['edt']) ? (int)$_GET['edt'] : 0;
 if (isset($_POST['add'])) {
     $cat = mysqli_real_escape_string($conn, $_POST['category']);
     $q   = mysqli_query($conn, "UPDATE article SET category='$cat' WHERE article_id='$id'");
-    if ($q) { header('Location: stories.php'); exit; }
+    if ($q) { $_SESSION['flash'] = ['type'=>'success','msg'=>'Article category updated.']; header('Location: stories.php'); exit; }
     $formError = 'Something went wrong. Please try again.';
 }
 

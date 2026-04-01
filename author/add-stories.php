@@ -20,6 +20,7 @@ if (isset($_POST['add'])) {
         move_uploaded_file($_FILES["picture"]["tmp_name"], "articles/" . $imgnewfile);
         $query = mysqli_query($conn, "INSERT INTO article (admin_id,heading,picture,content,category) VALUES('$id','$head','$imgnewfile','$content','$cat')");
         if ($query) {
+            $_SESSION['flash'] = ['type'=>'success','msg'=>'Article published successfully.'];
             header('Location: stories.php');
             exit;
         } else {

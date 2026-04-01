@@ -17,6 +17,7 @@ if (isset($_POST['add'])) {
         move_uploaded_file($_FILES["image"]["tmp_name"], "gallery/" . $imgnewfile);
         $query = mysqli_query($conn, "INSERT INTO gallery(admin_id,section,picture) VALUES('$id','$cat','$imgnewfile')");
         if ($query) {
+            $_SESSION['flash'] = ['type'=>'success','msg'=>'Image uploaded successfully.'];
             header('Location: gallery.php');
             exit;
         } else {

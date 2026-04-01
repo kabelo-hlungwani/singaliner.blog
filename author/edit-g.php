@@ -11,7 +11,7 @@ if (isset($_POST['add'])) {
         $formError = 'That category name is already taken.';
     } else {
         $q = mysqli_query($conn, "UPDATE gallery_category SET category='$heading' WHERE category_id='$id'");
-        if ($q) { header('Location: g-category.php'); exit; }
+        if ($q) { $_SESSION['flash'] = ['type'=>'success','msg'=>'Category updated successfully.']; header('Location: g-category.php'); exit; }
         $formError = 'Something went wrong. Please try again.';
     }
 }

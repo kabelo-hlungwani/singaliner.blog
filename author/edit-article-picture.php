@@ -18,7 +18,7 @@ if (isset($_POST['add'])) {
             $formError = 'Image upload failed. Please try again.';
         } else {
             $q = mysqli_query($conn, "UPDATE article SET picture='$newname' WHERE article_id='$id'");
-            if ($q) { header('Location: stories.php'); exit; }
+            if ($q) { $_SESSION['flash'] = ['type'=>'success','msg'=>'Article picture updated.']; header('Location: stories.php'); exit; }
             $formError = 'Something went wrong. Please try again.';
         }
     }

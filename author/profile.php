@@ -2,6 +2,21 @@
 session_start();
 include 'connect.php';
 
+if (isset($_POST['save'])) {
+    $fn    = mysqli_real_escape_string($conn, trim($_POST['first_name']));
+    $ln    = mysqli_real_escape_string($conn, trim($_POST['last_name']));
+    $email = mysqli_real_escape_string($conn, trim($_POST['email']));
+    $adid  = (int)$_SESSION['admin_id'];
+    $q = mysqli_query($conn, "UPDATE admin SET name='$fn', surname='$ln', email='$email' WHERE admin_id='$adid'");
+    if ($q) {
+        $_SESSION['email'] = $email;
+        $_SESSION['flash'] = ['type'=>'success','msg'=>'Profile updated successfully.'];
+        header('Location: profile.php?edt=' . $adid);
+        exit;
+    }
+    $saveError = 'Something went wrong. Please try again.';
+}
+
 $pageTitle = 'Profile';
 ?>
 <!DOCTYPE html>
@@ -46,6 +61,11 @@ $pageTitle = 'Profile';
       <h5><i class="fas fa-cog" style="color:var(--brand);margin-right:7px;"></i>Account Settings</h5>
     </div>
     <div class="admin-card-body">
+      <?php if (!empty($saveError)): ?>
+      <div style="background:#fee2e2;color:#dc2626;border-radius:8px;padding:10px 14px;font-size:.82rem;margin-bottom:14px;">
+        <i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($saveError) ?>
+      </div>
+      <?php endif; ?>
       <form class="adm-form" method="post">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
           <div class="form-group">
@@ -67,7 +87,7 @@ $pageTitle = 'Profile';
                  placeholder="admin@example.com"
                  value="<?= htmlspecialchars($_SESSION['email'] ?? '') ?>">
         </div>
-        <button class="btn-adm primary" type="submit">
+        <button class="btn-adm primary" type="submit" name="save">
           <i class="fas fa-save"></i> Save Changes
         </button>
       </form>
