@@ -61,10 +61,11 @@ if (mysqli_connect_errno()) {
                     $cntRes     = mysqli_query($conn, "SELECT COUNT(*) AS total FROM article");
                     $cntRow     = mysqli_fetch_assoc($cntRes);
                     $totalPosts = (int)$cntRow['total'];
-                    // page 1 = featured(1) + up to $perPage grid; page 2+ = $perPage grid
-                    $totalPages = ($totalPosts <= 1) ? 1 : (int)ceil(($totalPosts - 1) / $perPage);
+                    $hasFeatured = $totalPosts > 0;
+                    // Featured highlights the latest story, while All Stories lists every post.
+                    $totalPages = max(1, (int)ceil($totalPosts / $perPage));
                     $page       = min($page, $totalPages);
-                    $gridOffset = 1 + ($page - 1) * $perPage;
+                    $gridOffset = ($page - 1) * $perPage;
                     ?>
                     <div class="section-head">
                         <h2 class="blog-heading">All Stories</h2>
@@ -107,35 +108,13 @@ if (mysqli_connect_errno()) {
 
                     <?php if ($fp): ?>
 
-                        <?php if ($page === 1):
+                        <?php if ($page === 1 && $hasFeatured):
                             $fpWords   = str_word_count(strip_tags($fp['content']));
                             $fpTime    = max(1, (int)round($fpWords / 200));
                             $fpText    = strip_tags($fp['content']);
                             $fpExcerpt = mb_strlen($fpText) > 200 ? mb_substr($fpText, 0, 200) . '…' : $fpText;
                         ?>
-                    <article class="featured-card mb-5 reveal">
-                        <div class="featured-img-wrap">
-                            <img src="author/articles/<?php echo htmlspecialchars($fp['picture']); ?>" alt="<?php echo htmlspecialchars($fp['heading']); ?>">
-                            <span class="story-badge"><?php echo htmlspecialchars($fp['category']); ?></span>
-                        </div>
-                        <div class="featured-body">
-                            <span class="featured-label">&#9733; Featured Story</span>
-                            <h2 class="featured-title">
-                                <a href="read.php?edt=<?php echo (int)$fp['article_id']; ?>"><?php echo htmlspecialchars($fp['heading']); ?></a>
-                            </h2>
-                            <p class="story-excerpt"><?php echo htmlspecialchars($fpExcerpt); ?></p>
-                            <div class="story-meta mb-3">
-                                <i class="fas fa-user"></i> <?php echo htmlspecialchars($fp['name'] . ' ' . $fp['surname']); ?>
-                                &nbsp;&middot;&nbsp;
-                                <i class="fas fa-calendar-alt"></i> <?php echo htmlspecialchars($fp['date']); ?>
-                                &nbsp;&middot;&nbsp;
-                                <i class="fas fa-clock"></i> <?php echo $fpTime; ?> min read
-                                &nbsp;&middot;&nbsp;
-                                <i class="fas fa-eye"></i> <?php echo number_format((int)$fp['views']); ?> views
-                            </div>
-                            <a class="story-read-more" href="read.php?edt=<?php echo (int)$fp['article_id']; ?>">Read Story &nbsp;<i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </article>
+                    
                         <?php endif; ?>
 
                         <?php if (!empty($gridPosts)): ?>

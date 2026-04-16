@@ -74,7 +74,7 @@ $menuEscaped = mysqli_real_escape_string($conn, $menu);
                     </div>
 
                     <div class="toolbar">
-                        <a class="btn-home" href="index.php"><i class="fas fa-home"></i> Home</a>
+                       
                         <ul class="category-list">
                             <li><a class="category-pill" href="blog.php">All</a></li>
                             <?php

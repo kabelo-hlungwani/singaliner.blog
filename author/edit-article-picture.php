@@ -4,28 +4,87 @@ include 'connect.php';
 
 $id = isset($_GET['edt']) ? (int)$_GET['edt'] : 0;
 
-if (isset($_POST['add'])) {
-    if (empty($_FILES['picture']['name'])) {
-        $formError = 'Please choose a new image to upload.';
-    } else {
-        $ext     = pathinfo($_FILES['picture']['name'], PATHINFO_EXTENSION);
-        $newname = 'article_' . time() . '.' . $ext;
-        $target  = 'articles/' . $newname;
-        $allowed = ['jpg','jpeg','png','gif','webp'];
-        if (!in_array(strtolower($ext), $allowed)) {
-            $formError = 'Invalid file type. Allowed: jpg, jpeg, png, gif, webp.';
-        } elseif (!move_uploaded_file($_FILES['picture']['tmp_name'], $target)) {
-            $formError = 'Image upload failed. Please try again.';
-        } else {
-            $q = mysqli_query($conn, "UPDATE article SET picture='$newname' WHERE article_id='$id'");
-            if ($q) { $_SESSION['flash'] = ['type'=>'success','msg'=>'Article picture updated.']; header('Location: stories.php'); exit; }
-            $formError = 'Something went wrong. Please try again.';
-        }
-    }
+function upload_error_message($code) {
+  switch ($code) {
+    case UPLOAD_ERR_INI_SIZE:
+    case UPLOAD_ERR_FORM_SIZE:
+      return 'The selected image is too large to upload.';
+    case UPLOAD_ERR_PARTIAL:
+      return 'The image upload was interrupted. Please try again.';
+    case UPLOAD_ERR_NO_FILE:
+      return 'Please choose a new image to upload.';
+    case UPLOAD_ERR_NO_TMP_DIR:
+      return 'The server upload temp directory is missing.';
+    case UPLOAD_ERR_CANT_WRITE:
+      return 'The server cannot write uploaded files right now.';
+    case UPLOAD_ERR_EXTENSION:
+      return 'The upload was blocked by a server extension.';
+    default:
+      return 'Image upload failed. Please try again.';
+  }
 }
 
 $qry = mysqli_query($conn, "SELECT article_id, heading, picture FROM article WHERE article_id='$id' LIMIT 1");
 $art = $qry ? mysqli_fetch_assoc($qry) : null;
+
+if (isset($_POST['add'])) {
+  if (!$art) {
+    $formError = 'The selected article could not be found.';
+  } elseif (!isset($_FILES['picture'])) {
+    $formError = 'No image upload was received.';
+    } else {
+    $uploadError = (int)($_FILES['picture']['error'] ?? UPLOAD_ERR_NO_FILE);
+    $ext = strtolower(pathinfo($_FILES['picture']['name'] ?? '', PATHINFO_EXTENSION));
+        $allowed = ['jpg','jpeg','png','gif','webp'];
+
+    if ($uploadError !== UPLOAD_ERR_OK) {
+      $formError = upload_error_message($uploadError);
+    } elseif (!in_array($ext, $allowed, true)) {
+            $formError = 'Invalid file type. Allowed: jpg, jpeg, png, gif, webp.';
+        } else {
+      $uploadDir = __DIR__ . '/articles';
+
+      if (!is_dir($uploadDir) && !mkdir($uploadDir, 0777, true)) {
+        $formError = 'The article image folder could not be created.';
+      } elseif (!is_writable($uploadDir)) {
+        $formError = 'The article image folder is not writable by the server.';
+      } elseif (!is_uploaded_file($_FILES['picture']['tmp_name'])) {
+        $formError = 'The uploaded image could not be verified.';
+      } else {
+        try {
+          $newname = 'article_' . bin2hex(random_bytes(16)) . '.' . $ext;
+        } catch (Exception $e) {
+          $newname = 'article_' . uniqid('', true) . '.' . $ext;
+        }
+
+        $target = $uploadDir . '/' . $newname;
+
+        if (!move_uploaded_file($_FILES['picture']['tmp_name'], $target)) {
+          $formError = 'Image upload failed. Please try again.';
+        } else {
+          $safeName = mysqli_real_escape_string($conn, $newname);
+          $q = mysqli_query($conn, "UPDATE article SET picture='$safeName' WHERE article_id='$id'");
+
+          if ($q) {
+            $oldPicture = $art['picture'] ?? '';
+            $oldPath = $uploadDir . '/' . $oldPicture;
+
+            if ($oldPicture !== '' && $oldPicture !== $newname && is_file($oldPath)) {
+              @unlink($oldPath);
+            }
+
+            $_SESSION['flash'] = ['type'=>'success','msg'=>'Article picture updated.'];
+            header('Location: stories.php');
+            exit;
+          }
+
+          @unlink($target);
+          $formError = 'Something went wrong. Please try again.';
+        }
+      }
+        }
+    }
+}
 
 $pageTitle = 'Edit Article Picture';
 ?>

@@ -3,6 +3,25 @@
 <?php
 include 'connect.php';
 
+function render_article_content($html) {
+    $allowedTags = '<p><br><strong><b><em><i><u><ul><ol><li><blockquote><h2><h3><h4><h5><h6><a>';
+    $sanitized = strip_tags((string)$html, $allowedTags);
+
+    return preg_replace_callback(
+        '/<a\b([^>]*)href=("|\')([^"\']*)(\2)([^>]*)>/i',
+        function ($matches) {
+            $href = trim($matches[3]);
+
+            if ($href === '' || preg_match('/^(javascript|data):/i', $href)) {
+                return '<a>';
+            }
+
+            return '<a href="' . htmlspecialchars($href, ENT_QUOTES, 'UTF-8') . '">';
+        },
+        $sanitized
+    );
+}
+
 if (mysqli_connect_errno()) {
     echo "Failed to connect to MySQL: " . mysqli_connect_error();
 }
@@ -94,7 +113,7 @@ if ($id > 0) {
                             <h1 class="article-title"><?php echo htmlspecialchars($art['heading']); ?></h1>
 
                             <!-- Body content -->
-                            <div class="article-content mt-3"><?php echo nl2br(htmlspecialchars($art['content'])); ?></div>
+                            <div class="article-content mt-3"><?php echo render_article_content($art['content']); ?></div>
 
                             <!-- Share buttons -->
                             <div class="article-share">
@@ -141,19 +160,24 @@ if ($id > 0) {
 
                     <div class="col-lg-4">
                         <aside class="related-box reveal">
-                            <h2 class="mb-3"><i class="icon ion-ios-book"></i> More Stories</h2>
+                            <div class="related-box-head">
+                                <h2 class="mb-0"><i class="fas fa-book-open"></i> More Stories</h2>
+                                <p>Fresh reads from our latest newsroom updates.</p>
+                            </div>
                             <?php
                             $re = mysqli_query($conn, "SELECT article.article_id, article.heading, article.picture, article.date FROM article WHERE article_id <> '$id' ORDER BY date DESC LIMIT 0, 8");
                             if ($re && mysqli_num_rows($re) > 0) {
                                 while ($rel = mysqli_fetch_assoc($re)) {
                                     ?>
-                                    <div class="related-item">
+                                    <a class="related-item" href="read.php?edt=<?php echo (int)$rel['article_id']; ?>">
                                         <img class="related-thumb" src="author/articles/<?php echo htmlspecialchars($rel['picture']); ?>" alt="<?php echo htmlspecialchars($rel['heading']); ?>">
                                         <div class="related-item-body">
-                                            <a href="read.php?edt=<?php echo (int)$rel['article_id']; ?>"><?php echo htmlspecialchars($rel['heading']); ?></a>
-                                            <small><?php echo htmlspecialchars($rel['date']); ?></small>
+                                            <span class="related-kicker">Story</span>
+                                            <span class="related-title"><?php echo htmlspecialchars($rel['heading']); ?></span>
+                                            <small><i class="far fa-calendar-alt"></i> <?php echo htmlspecialchars($rel['date']); ?></small>
                                         </div>
-                                    </div>
+                                        <span class="related-arrow" aria-hidden="true"><i class="fas fa-arrow-right"></i></span>
+                                    </a>
                                     <?php
                                 }
                             } else {
