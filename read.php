@@ -13,6 +13,14 @@ function render_article_content($html) {
     return $sanitized;
 }
 
+function safe_mysqli_query($conn, $sql) {
+    try {
+        return mysqli_query($conn, $sql);
+    } catch (Throwable $e) {
+        return false;
+    }
+}
+
 if (mysqli_connect_errno()) {
     echo "Failed to connect to MySQL: " . mysqli_connect_error();
 }
@@ -20,7 +28,7 @@ if (mysqli_connect_errno()) {
 $id = isset($_GET['edt']) ? (int)$_GET['edt'] : 0;
 // Increment view counter
 if ($id > 0) {
-    mysqli_query($conn, "UPDATE article SET views = views + 1 WHERE article_id = $id");
+    safe_mysqli_query($conn, "UPDATE article SET views = views + 1 WHERE article_id = $id");
 }
 ?>
 <head>
@@ -84,6 +92,7 @@ if ($id > 0) {
                                 $art = mysqli_fetch_assoc($result);
                                 $wc  = str_word_count(strip_tags($art['content']));
                                 $rt  = max(1, (int)round($wc / 200));
+                                $viewCount = isset($art['views']) ? (int)$art['views'] : 0;
                                 $encodedTitle = urlencode($art['heading']);
                                 $encodedUrl   = urlencode('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
                             ?>
@@ -94,7 +103,7 @@ if ($id > 0) {
                                 <span class="meta-chip"><i class="fas fa-user"></i>&nbsp;<?php echo htmlspecialchars($art['name'] . ' ' . $art['surname']); ?></span>
                                 <span class="meta-chip"><i class="fas fa-calendar-alt"></i>&nbsp;<?php echo htmlspecialchars($art['date']); ?></span>
                                 <span class="meta-chip"><i class="fas fa-clock"></i>&nbsp;<?php echo $rt; ?> min read</span>
-                                <span class="meta-chip"><i class="fas fa-eye"></i>&nbsp;<?php echo number_format((int)$art['views']); ?> views</span>
+                                <span class="meta-chip"><i class="fas fa-eye"></i>&nbsp;<?php echo number_format($viewCount); ?> views</span>
                             </div>
 
                             <!-- Cover image -->
