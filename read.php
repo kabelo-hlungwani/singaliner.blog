@@ -7,19 +7,10 @@ function render_article_content($html) {
     $allowedTags = '<p><br><strong><b><em><i><u><ul><ol><li><blockquote><h2><h3><h4><h5><h6><a>';
     $sanitized = strip_tags((string)$html, $allowedTags);
 
-    return preg_replace_callback(
-        '/<a\b([^>]*)href=("|\')([^"\']*)(\2)([^>]*)>/i',
-        function ($matches) {
-            $href = trim($matches[3]);
+    $sanitized = preg_replace('/\s+on[a-z]+\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]+)/i', '', $sanitized);
+    $sanitized = preg_replace('/\s+href\s*=\s*("\s*(javascript|data):[^"]*"|\'\s*(javascript|data):[^\']*\'|\s*(javascript|data):[^\s>]+)/i', '', $sanitized);
 
-            if ($href === '' || preg_match('/^(javascript|data):/i', $href)) {
-                return '<a>';
-            }
-
-            return '<a href="' . htmlspecialchars($href, ENT_QUOTES, 'UTF-8') . '">';
-        },
-        $sanitized
-    );
+    return $sanitized;
 }
 
 if (mysqli_connect_errno()) {
